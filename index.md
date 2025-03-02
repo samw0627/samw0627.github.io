@@ -9,21 +9,21 @@ class: home
 <div class="columns" markdown="1">
 
 <div class="intro" markdown="1">
-I'm a professor at the [Human-Computer Interaction Institute](https://hcii.cmu.edu/) at [Carnegie Mellon University](https://www.cmu.edu/) and an ML researcher at [Apple](https://www.apple.com/) <i class="fab fa-apple"></i>. I design and build interactive systems for visualization and analysis. At CMU, I co-lead the [Data Interaction Group](https://dig.cmu.edu/). [Read this]({% post_url 2024-11-20-phd-application %}) if you want to apply for a PhD with me.
+I'm a Research Assistant at the [Paul G. Allen School](https://www.cs.washington.edu/) at [University of Washington](https://www.washington.edu/), where I am working with [Amy Zhang](https://homes.cs.washington.edu/~axz/) at the [Social Futures Lab](https://social.cs.washington.edu/index.html). My research is in Human Computer Interaction and Social Computing, specifically in building systems that facilitates understanding and participation in an online social setting. I am collabroating with [Ruotong Wang](https://homes.cs.washington.edu/~ruotongw/)
 
-I received my PhD from the [Paul G. Allen School](https://www.cs.washington.edu/) at the [University of Washington](https://www.washington.edu/), where I worked with [Jeff Heer](https://homes.cs.washington.edu/~jheer/) and [Bill Howe](https://homes.cs.washington.edu/~billhowe/) in the [Interactive Data Lab](http://idl.cs.washington.edu/) and the [Database Group](https://db.cs.washington.edu/).
+I recently graduated from my Masters degree at [Global Innovation Exchange](https://gix.uw.edu/) from the [University of Washington](https://www.washington.edu/), where I worked with [Jerry Cao](https://jerrycao22.github.io/) from [Ubicomp Lab](https://ubicomplab.cs.washington.edu/) in designing accessible eyedroppers for people with disability. I received my Bachelors degree in [Cognitive Science](https://cogsci.ucsd.edu/) and a minor in [Computer Science](https://cse.ucsd.edu/) from [UC San Diego](https://ucsd.edu/). Previously, I have worked with [Yan Chen](https://chensivan.github.io/) from [Virginia Tech](https://vt.edu/) on building learning analytics tools. 
 
-My systems have [won](https://vega.github.io/vega-lite/) [awards](https://uwdata.github.io/draco/) [at](https://arxiv.org/pdf/2110.12536) [premier](https://www.domoritz.de/papers/2023-LineBias-VIS.pdf) [academic](https://www.domoritz.de/papers/2023-AutoProfiler-VIS.pdf) [venues](https://arxiv.org/pdf/2404.03085) and are used by the [Python](https://altair-viz.github.io) and [JavaScript](https://vega.github.io/vega-lite/) data science communities.
 
-Find me on [GitHub](https://github.com/domoritz), the [Fediverse](https://vis.social/@dom), [Bluesky](https://bsky.app/profile/domoritz.de), [LinkedIn](https://www.linkedin.com/in/dominik-moritz-409b8124/), or [Twitter](https://twitter.com/domoritz).
+Find me on [GitHub](https://github.com/domoritz), [Bluesky](https://bsky.app/profile/domoritz.de), [LinkedIn](https://www.linkedin.com/in/dominik-moritz-409b8124/), [Twitter](https://twitter.com/domoritz) or [Google Scholar](https://scholar.google.com/citations?user=3ikhPPUAAAAJ&hl=en)
 </div>
 
 <div class="me" markdown="1">
-<picture>
-  <source srcset='/images/dominik_berlin.webp' type='image/webp' />
+<picture style="max-width: 300px; display: block;">
+  <source srcset='/images/sam_wong.webp' type='image/webp' />
   <img
-    src='/images/dominik_berlin.jpg'
-    alt='Dominik Moritz'>
+    src='/images/sam_wong.jpg'
+    alt='Sam Wong'
+    style="width: 100%; height: auto;">
 </picture>
 
 {:.no-list}
