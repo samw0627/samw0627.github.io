@@ -1,12 +1,12 @@
 # Site settings
-title: Dominik Moritz
-email: domoritz@cmu.edu
+title: Sam Wong
+email: samw627@uw.edu
 description: > # this means to ignore newlines until "baseurl:"
-   Professor at Carnegie Mellon University and Researcher at Apple. I create interactive data visualization and analysis tools. PhD from University of Washington.
+   HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science & Engineering, University of Washington.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://www.domoritz.de" # the base hostname & protocol for your site
-production_url: "https://www.domoritz.de"
-github_username: domoritz
+url: "https://samw0627.github.io" # the base hostname & protocol for your site
+production_url: ""https://samw0627.github.io"
+github_username: samw0627
 permalink: /blog/:year/:month/:title.html
 
 twitter:
