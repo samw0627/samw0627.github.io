@@ -2,7 +2,7 @@
 title: Sam Wong
 email: samw627@uw.edu
 description: > # this means to ignore newlines until "baseurl:"
-Researcher at Paul G. Allen School of Computer Science & Engineering at University of Washington.
+  Researcher at Paul G. Allen School of Computer Science & Engineering at University of Washington.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://samw0627.github.io"
 production_url: "https://samw0627.github.io"
@@ -21,6 +21,8 @@ collections:
 
 jekyll-mentions:
   base_url: https://twitter.com
+
+theme: jekyll-theme-minimal  # or your preferred theme
 
 plugins:
   - jekyll-sitemap

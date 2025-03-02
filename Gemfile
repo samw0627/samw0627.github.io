@@ -9,4 +9,8 @@ group :jekyll_plugins do
     gem "jekyll-mentions"
     gem "jekyll-seo-tag"
     gem "jekyll-sitemap"
+    gem "github-pages"
 end
+
+gem "webrick", "~> 1.7"
+gem "jekyll-theme-minimal"

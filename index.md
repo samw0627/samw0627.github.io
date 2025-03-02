@@ -19,11 +19,12 @@ Find me on [GitHub](https://github.com/domoritz), [Bluesky](https://bsky.app/pro
 </div>
 
 <div class="me" markdown="1">
-<picture>
-  <source srcset='/images/dominik_berlin.webp' type='image/webp' />
+<picture style="max-width: 300px; display: block;">
+  <source srcset='/images/sam_wong.webp' type='image/webp' />
   <img
-    src='/images/profile-pic.jpg'
-    alt='Sam Wong'>
+    src='/images/sam_wong.jpg'
+    alt='Sam Wong'
+    style="width: 100%; height: auto;">
 </picture>
 
 {:.no-list}
