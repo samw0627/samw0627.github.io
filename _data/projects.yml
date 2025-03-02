@@ -1,19 +1,18 @@
-- title: Mosaic
+- title: VizGroup
   url: https://idl.uw.edu/mosaic/
-  code: https://github.com/uwdata/mosaic
   paper: https://www.domoritz.de/papers/2023-Mosaic-VIS.pdf
   image: mosaic.png
-  description: "Mosaic is an extensible framework for linking databases and interactive views."
-  highlight: 2
+  description: "Vizgroup is a learning analytics tool that helps instructors in "
+  highlight: 1
 
-- title: Swift Charts
+- title: VizPI
   url: https://developer.apple.com/documentation/Charts
   video: https://developer.apple.com/wwdc22/10136
   image: swiftcharts.png
   description: "Swift Charts is a framework for informative, delightful, and accessible charts on Apple's platforms."
-  highlight: 4
+  highlight: 2
 
-- title: Audio Graphs
+- title: Sphere
   code: https://developer.apple.com/documentation/accessibility/audio_graphs
   video: https://developer.apple.com/videos/play/wwdc2021/10122/
   image: audiographs.png

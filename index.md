@@ -9,9 +9,10 @@ class: home
 <div class="columns" markdown="1">
 
 <div class="intro" markdown="1">
-I'm a Research Assistant at the [Paul G. Allen School](https://www.cs.washington.edu/) at [University of Washington](https://www.washington.edu/), where I am working with [Amy Zhang](https://homes.cs.washington.edu/~axz/) at the [Social Futures Lab](https://social.cs.washington.edu/index.html). My research is in Human Computer Interaction and Social Computing, specifically in building systems that facilitates understanding and participation in an online social setting.
 
-I recently graduated from my Masters degree at [Global Innovation Exchange] from the [University of Washington], where I worked with [Jerry Cao] from [Ubicomp Lab] in designing accessible eyedroppers for people with disability. I received my Bachelors degree in [Cognitive Science] and a minor in [Computer Sciece] from [UC San Diego]. Previously, I have worked with [Yan Chen] from [Virginia Tech] on building learning analytics tools. 
+I'm a Research Assistant at the [Paul G. Allen School](https://www.cs.washington.edu/) at [University of Washington](https://www.washington.edu/), where I am working with [Amy Zhang](https://homes.cs.washington.edu/~axz/) at the [Social Futures Lab](https://social.cs.washington.edu/index.html). My research is in Human Computer Interaction and Social Computing, specifically in building systems that facilitates understanding and participation in an online social setting. I am collabroating with [Ruotong Wang](https://homes.cs.washington.edu/~ruotongw/)
+
+I recently graduated from my Masters degree at [Global Innovation Exchange](https://gix.uw.edu/) from the [University of Washington](https://www.washington.edu/), where I worked with [Jerry Cao](https://jerrycao22.github.io/) from [Ubicomp Lab](https://ubicomplab.cs.washington.edu/) in designing accessible eyedroppers for people with disability. I received my Bachelors degree in [Cognitive Science](https://cogsci.ucsd.edu/) and a minor in [Computer Science](https://cse.ucsd.edu/) from [UC San Diego](https://ucsd.edu/). Previously, I have worked with [Yan Chen](https://chensivan.github.io/) from [Virginia Tech](https://vt.edu/) on building learning analytics tools. 
 
 
 Find me on [GitHub](https://github.com/domoritz), [Bluesky](https://bsky.app/profile/domoritz.de), [LinkedIn](https://www.linkedin.com/in/dominik-moritz-409b8124/), [Twitter](https://twitter.com/domoritz) or [Google Scholar](https://scholar.google.com/citations?user=3ikhPPUAAAAJ&hl=en)
