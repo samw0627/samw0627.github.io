@@ -1,5 +1,5 @@
 /* TEAM */
-	Author/Theme: Dominik Moritz
+	Author/Theme: Sam Wong
 	Twitter: @domoritz
 	Mastodon: @dom@vis.social
 	From: Pittsburgh, PA
