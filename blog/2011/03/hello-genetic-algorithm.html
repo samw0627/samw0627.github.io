@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="Sam Wong">
+  <meta name="theme-color" content="#b00">
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="250x250" />
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Hello Genetic Algorithm | Sam Wong</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Hello Genetic Algorithm" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hier mal ein Optimierungsalgorithmus, mit dem sich verschiedenste Probleme lassen können. Hier soll es einfach nur darum gehen, den Text “Hello World!” zu finden. das Problem ist insofern nicht so schwer, weil es keine lokalen Maxima gibt, in denen der Algorithmus hängen bleiben kann und es lässt sich einfach feststellen, dass das Optimum erreicht worden ist." />
+<meta property="og:description" content="Hier mal ein Optimierungsalgorithmus, mit dem sich verschiedenste Probleme lassen können. Hier soll es einfach nur darum gehen, den Text “Hello World!” zu finden. das Problem ist insofern nicht so schwer, weil es keine lokalen Maxima gibt, in denen der Algorithmus hängen bleiben kann und es lässt sich einfach feststellen, dass das Optimum erreicht worden ist." />
+<link rel="canonical" href="https://samw0627.github.io/blog/2011/03/hello-genetic-algorithm.html" />
+<meta property="og:url" content="https://samw0627.github.io/blog/2011/03/hello-genetic-algorithm.html" />
+<meta property="og:site_name" content="Sam Wong" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2011-03-29T22:44:57+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Hello Genetic Algorithm" />
+<meta name="twitter:site" content="@domoritz" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2011-03-29T22:44:57+00:00","datePublished":"2011-03-29T22:44:57+00:00","description":"Hier mal ein Optimierungsalgorithmus, mit dem sich verschiedenste Probleme lassen können. Hier soll es einfach nur darum gehen, den Text “Hello World!” zu finden. das Problem ist insofern nicht so schwer, weil es keine lokalen Maxima gibt, in denen der Algorithmus hängen bleiben kann und es lässt sich einfach feststellen, dass das Optimum erreicht worden ist.","headline":"Hello Genetic Algorithm","mainEntityOfPage":{"@type":"WebPage","@id":"https://samw0627.github.io/blog/2011/03/hello-genetic-algorithm.html"},"url":"https://samw0627.github.io/blog/2011/03/hello-genetic-algorithm.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <link rel="alternate" type="application/rss+xml" title="Sam Wong" href="https://samw0627.github.io/feed.xml">
+
+  <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+  <body>
+    
+<header class="page-header">
+  <nav class="container">
+    <a class="site-title" href="/">Sam Wong</a>
+
+    <a href="/projects/">Projects</a>
+    <a href="/publications/">Publications</a>
+    <a href="/talks/">Talks</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+    <a href="/cv/">CV</a>
+
+    <span class="external">
+      <a href="https://bsky.app/profile/domoritz.de"><i class="fa-brands fa-bluesky" aria-hidden="true"></i> Bsky</a>
+      <a href="mailto:domoritz@cmu.edu"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
+    </span>
+  </nav>
+</header>
+
+
+    <main class="page-content">
+      <article class="container post">
+  <header class="post-header">
+    <h1 class="post-title">Hello Genetic Algorithm</h1>
+    
+    <p class="post-meta">
+      Published on Mar 29, 2011
+      
+      
+      </p>
+  </header>
+
+  <div class="post-content">
+    <p>Hier mal ein Optimierungsalgorithmus, mit dem sich verschiedenste Probleme lassen können. Hier soll es einfach nur darum gehen, den Text “Hello World!” zu finden. das Problem ist insofern nicht so schwer, weil es keine lokalen Maxima gibt, in denen der Algorithmus hängen bleiben kann und es lässt sich einfach feststellen, dass das Optimum erreicht worden ist.</p>
+
+<p>An sich kann ein genetischer Algorithmus aber auch solche Probleme lösen, bei denen es lokale Maxima gibt oder nicht die optimale, sondern nur eine sehr gute Lösung gefunden werden soll. Ein andere Algorithmus für diese Art von Problemen ist die simulierte Abkühlung (<a href="http://www.dmoritz.bplaced.de/2011/01/informaticup-2011/">passender Blogeintrag</a>).</p>
+
+<p>Genug der Worte, hier der Code. Ich muss dazu sagen, dass ich ich ihn auf einer Bahnfahrt zusammengehackt habe und das Prinzip des genetischen Algorithmus aus den Gedächtnis herleiten musste, wobei dies das erste Mal ist, dass ich überhaupt einen genetischen Algorithmus geschrieben habe. Kommentare willkommen, aber bitte nicht über den Stil, es ging nicht um schönen Code, sondern einfach mal den Versuch, zur Lösung zu kommen.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+</span>
+<span class="kn">import</span> <span class="n">random</span>
+
+<span class="k">def</span> <span class="nf">bewertung</span><span class="p">(</span><span class="n">individuum</span><span class="p">):</span>
+	<span class="c1">#return sum( abs(ord(individuum[i])-ord(z)) for i,z in enumerate(ziel))
+</span>	<span class="k">return</span> <span class="nf">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">ziel</span><span class="p">)</span> <span class="k">if</span> <span class="n">individuum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">mutation</span><span class="p">(</span><span class="n">individuum</span><span class="p">):</span>
+	<span class="n">pos</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">random</span><span class="p">()</span><span class="o">*</span><span class="nf">len</span><span class="p">(</span><span class="n">individuum</span><span class="p">))</span>
+	<span class="n">ran</span> <span class="o">=</span> <span class="n">moegl</span><span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">random</span><span class="p">()</span><span class="o">*</span><span class="nf">len</span><span class="p">(</span><span class="n">moegl</span><span class="p">))]</span>
+	<span class="n">indivliste</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">individuum</span><span class="p">)</span>
+	<span class="n">indivliste</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">=</span><span class="n">ran</span>
+	<span class="n">individuum</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">indivliste</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">individuum</span>
+
+<span class="k">def</span> <span class="nf">paarenLassen</span><span class="p">(</span><span class="n">individuum1</span><span class="p">,</span> <span class="n">individuum2</span><span class="p">):</span>
+	<span class="n">individuum1</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">individuum1</span><span class="p">)</span>
+	<span class="n">individuum2</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">individuum2</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">individuum1</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">random</span><span class="p">.</span><span class="nf">random</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">:</span>
+			<span class="n">individuum1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">individuum2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+	<span class="k">return</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">individuum1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">findLooser</span><span class="p">(</span><span class="n">population</span><span class="p">):</span>
+	<span class="n">gewichte</span> <span class="o">=</span> <span class="nf">map</span><span class="p">(</span><span class="n">bewertung</span><span class="p">,</span><span class="n">population</span><span class="p">)</span>
+	<span class="nb">max</span> <span class="o">=</span> <span class="n">gewichte</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">maxpos</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">gewichte</span><span class="p">):</span>
+		<span class="n">maxpos</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxpos</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="nb">max</span> <span class="nf">else </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">maxpos</span>
+
+<span class="k">def</span> <span class="nf">findMinMax</span><span class="p">(</span><span class="n">anz</span><span class="p">,</span><span class="n">reverse</span><span class="p">):</span>
+	<span class="n">liste</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">individuum</span> <span class="ow">in</span> <span class="n">population</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+		<span class="n">liste</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">individuum</span><span class="p">,</span><span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+	<span class="n">liste</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="nb">cmp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">:</span> <span class="nf">cmp</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">reverse</span> <span class="k">else</span> <span class="mi">1</span><span class="p">))</span>
+	<span class="n">liste</span> <span class="o">=</span> <span class="n">liste</span><span class="p">[:</span><span class="n">anz</span><span class="p">]</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="n">liste</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">printAll</span><span class="p">():</span>
+	<span class="k">for</span> <span class="n">individuum</span> <span class="ow">in</span> <span class="n">population</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+		<span class="k">print</span> <span class="n">individuum</span><span class="p">,</span> <span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+	<span class="k">print</span> <span class="sh">"</span><span class="s">###############</span><span class="sh">"</span>
+
+<span class="n">ziel</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Hello World!</span><span class="sh">"</span>
+<span class="n">moegl</span> <span class="o">=</span> <span class="sh">"</span><span class="s">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ !@$%^&amp;*()=+-?&lt;&gt;</span><span class="sh">"</span>
+<span class="n">population</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1">#Anfangspopulation
+</span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">):</span>
+	<span class="n">individuum</span> <span class="o">=</span> <span class="sh">""</span><span class="p">.</span><span class="nf">join</span><span class="p">([</span><span class="n">moegl</span><span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">random</span><span class="p">()</span><span class="o">*</span><span class="nf">len</span><span class="p">(</span><span class="n">moegl</span><span class="p">))]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nf">len</span><span class="p">(</span><span class="n">ziel</span><span class="p">))])</span>
+	<span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nf">bewertung</span><span class="p">(</span><span class="n">individuum</span><span class="p">),</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="sh">"</span><span class="s">Ausgangspopulation:</span><span class="sh">"</span>
+<span class="nf">printAll</span><span class="p">()</span>
+
+<span class="n">anzahl</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">ziel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">population</span><span class="p">:</span>
+	<span class="n">anzahl</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="c1">#print 'neue Generation'
+</span>
+	<span class="c1">#Bewertung
+</span>	<span class="k">for</span> <span class="n">individuum</span> <span class="ow">in</span> <span class="n">population</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+		<span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nf">bewertung</span><span class="p">(</span><span class="n">individuum</span><span class="p">),</span><span class="mi">0</span><span class="p">]</span>
+		<span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">random</span><span class="p">.</span><span class="nf">randrange</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">11</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>
+	<span class="c1">#print 'Bewertung'
+</span>	<span class="c1">#printAll()
+</span>
+	<span class="c1">#Selektion
+</span>	<span class="n">selektion</span> <span class="o">=</span> <span class="nf">findMinMax</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="bp">False</span><span class="p">)</span>
+	<span class="c1">#print 'selektion', selektion
+</span>
+	<span class="c1">#Rekombination, Crossover
+</span>	<span class="n">kinder</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">selektion2</span> <span class="o">=</span> <span class="n">selektion</span><span class="p">[:]</span>
+	<span class="n">random</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">selektion2</span><span class="p">)</span>
+	<span class="n">random</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">selektion</span><span class="p">)</span>
+	<span class="k">while</span> <span class="n">selektion</span><span class="p">:</span>
+		<span class="n">kinder</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">paarenLassen</span><span class="p">(</span><span class="n">selektion</span><span class="p">.</span><span class="nf">pop</span><span class="p">(),</span> <span class="n">selektion</span><span class="p">.</span><span class="nf">pop</span><span class="p">()))</span>
+		<span class="n">kinder</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">paarenLassen</span><span class="p">(</span><span class="n">selektion2</span><span class="p">.</span><span class="nf">pop</span><span class="p">(),</span> <span class="n">selektion2</span><span class="p">.</span><span class="nf">pop</span><span class="p">()))</span>
+	<span class="c1">#print 'kinder', kinder
+</span>
+	<span class="c1">#Mutation
+</span>	<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">kinder</span><span class="p">):</span>
+		<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+			<span class="n">mutant</span> <span class="o">=</span> <span class="nf">mutation</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">mutant</span> <span class="ow">in</span> <span class="n">population</span><span class="p">.</span><span class="nf">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mutant</span> <span class="ow">in</span> <span class="n">kinder</span><span class="p">:</span>
+				<span class="k">break</span>
+		<span class="n">kinder</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutant</span>
+	<span class="c1">#print 'mutierte Kinder', kinder
+</span>
+	<span class="c1">#sterben lassen
+</span>	<span class="n">maxima</span> <span class="o">=</span> <span class="nf">findMinMax</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">maximum</span> <span class="ow">in</span> <span class="n">maxima</span><span class="p">:</span>
+		<span class="n">population</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="n">maximum</span><span class="p">)</span>
+
+	<span class="c1">#neue Population
+</span>	<span class="k">for</span> <span class="n">individuum</span> <span class="ow">in</span> <span class="n">kinder</span><span class="p">:</span>
+		<span class="n">population</span><span class="p">[</span><span class="n">individuum</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="sh">"</span><span class="s">Letzte Population:</span><span class="sh">"</span>
+<span class="nf">printAll</span><span class="p">()</span>
+<span class="k">print</span> <span class="sh">"</span><span class="s">Benötigte Generationen:</span><span class="sh">"</span><span class="p">,</span> <span class="n">anzahl</span>
+
+</code></pre></div></div>
+
+<h3 id="ausblick-was-man-noch-verbessern-sollte">Ausblick (was man noch verbessern sollte):</h3>
+
+<ul>
+  <li>Objektorientiert</li>
+  <li>Kommentare</li>
+  <li>variable Parameter
+    <ul>
+      <li>Größe der Population</li>
+      <li>Anzahl der Kinder</li>
+      <li>Stärke der Mutation</li>
+      <li>mehr/weniger Zufall bei der Auswahl für Rekombination</li>
+      <li>am besten neu schreiben, so unsauber, wie das ist :-)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="noch-zwei-ganz-nette-seiten-zum-thema">Noch zwei ganz nette Seiten zum Thema</h3>
+
+<p><a href="https://www.obitko.com/tutorials/genetic-algorithms/index.php">http://www.obitko.com/tutorials/genetic-algorithms/index.php</a>
+<a href="http://www.ai-junkie.com/ga/intro/gat1.html">http://www.ai-junkie.com/ga/intro/gat1.html</a></p>
+
+  </div>
+
+  <div class="blog-links">
+  
+    <div>
+      <i class="fas fa-md fa-chevron-left"></i>
+      <a href="/blog/2011/03/technik-ist-magie.html" title="Previous Post: Technik is (fast) Magie">Technik is (fast) Magie</a>
+    </div>
+  
+  
+    <div>
+      <a href="/blog/2011/04/asteroids-auf-beliebiger-website-spielen.html" title="Next Post: ">Asteroids auf beliebiger Website spielen</a>
+      <i class="fas fa-md fa-chevron-right"></i>
+    </div>
+  
+  </div>
+</article>
+
+    </main>
+
+    <footer>
+  <div class="container">
+    <div class="footer-col">
+      Hello from Seattle.<br>
+      <abbr title="Last build on 2025-03-10">March 2025</abbr>
+    </div>
+    <div class="footer-col">
+      This template is based on <a href="https://github.com/domoritz/domoritz.github.io">Dominik Moritz's website</a>.
+    </div>
+    <div class="footer-col site-desc">HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+ I'm <a href="https://twitter.com/domoritz">@domoritz</a> on Twitter, <a rel="me" href="https://vis.social/@dom">@dom@vis.social</a> on the Fediverse, and <a href="https://bsky.app/profile/domoritz.de">@domoritz.de</a> on Bluesky.</div>
+  </div>
+</footer>
+
+    <script>
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+  var headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  for (var i=0; i<headers.length; i++) {
+    var h = headers[i];
+    var name = h.getAttribute("id");
+    var title = h.innerHTML;
+    h.innerHTML = '<a href="#' + name + '" class="anchor"><i class="fas fa-hashtag"></i></a>' + trim(title);
+  }
+</script>
+
+  </body>
+</html>

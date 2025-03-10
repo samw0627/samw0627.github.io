@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="Sam Wong">
+  <meta name="theme-color" content="#b00">
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="250x250" />
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Datenbestandsanalyse GovData | Sam Wong</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Datenbestandsanalyse GovData" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Was wir jetzt schon über die Daten im neuen Datenportal sagen können." />
+<meta property="og:description" content="Was wir jetzt schon über die Daten im neuen Datenportal sagen können." />
+<link rel="canonical" href="https://samw0627.github.io/blog/2013/02/datenbestandsanalyse-govdata.html" />
+<meta property="og:url" content="https://samw0627.github.io/blog/2013/02/datenbestandsanalyse-govdata.html" />
+<meta property="og:site_name" content="Sam Wong" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2013-02-20T00:18:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Datenbestandsanalyse GovData" />
+<meta name="twitter:site" content="@domoritz" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2013-02-20T00:18:00+00:00","datePublished":"2013-02-20T00:18:00+00:00","description":"Was wir jetzt schon über die Daten im neuen Datenportal sagen können.","headline":"Datenbestandsanalyse GovData","mainEntityOfPage":{"@type":"WebPage","@id":"https://samw0627.github.io/blog/2013/02/datenbestandsanalyse-govdata.html"},"url":"https://samw0627.github.io/blog/2013/02/datenbestandsanalyse-govdata.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <link rel="alternate" type="application/rss+xml" title="Sam Wong" href="https://samw0627.github.io/feed.xml">
+
+  <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+  <body>
+    
+<header class="page-header">
+  <nav class="container">
+    <a class="site-title" href="/">Sam Wong</a>
+
+    <a href="/projects/">Projects</a>
+    <a href="/publications/">Publications</a>
+    <a href="/talks/">Talks</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+    <a href="/cv/">CV</a>
+
+    <span class="external">
+      <a href="https://bsky.app/profile/domoritz.de"><i class="fa-brands fa-bluesky" aria-hidden="true"></i> Bsky</a>
+      <a href="mailto:domoritz@cmu.edu"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
+    </span>
+  </nav>
+</header>
+
+
+    <main class="page-content">
+      <article class="container post">
+  <header class="post-header">
+    <h1 class="post-title">Datenbestandsanalyse GovData</h1>
+    <p class="post-subtitle">Was wir jetzt schon über die Daten im neuen Datenportal sagen können.</p>
+    <p class="post-meta">
+      Published on Feb 20, 2013
+      
+      
+      </p>
+  </header>
+
+  <div class="post-content">
+    <p>Die neue <a href="https://www.govdata.de/">Datenplattform des <abbr title="Bundesministerium des Innern">BMI</abbr></a> ist heute mit ein paar Startschwierigkeiten online gegangen. Der Datenbestand umfasst zur Zeit 1123 Datensätze. Ich habe mir mal ein Script geschrieben, dass etwas aggregiert, was für Daten auf der neuen Plattform zu finden sind.</p>
+
+<p>Die Rohdaten habe ich über die <a href="http://docs.ckan.org/en/latest/api.html">CKAN API</a> erhalten. Einen Dump aller <code class="language-plaintext highlighter-rouge">packages</code> (Datensätze) mit <code class="language-plaintext highlighter-rouge">resources</code> gibt es mit <code lang="bash" class="language-plaintext highlighter-rouge">curl http://www.govdata.de/ckan/api/3/action/current_package_list_with_resources -d '{}' &gt; data.json</code>.</p>
+
+<p>Da GovData gerade offline ist, hier der <a href="https://dl.dropbox.com/u/12770094/govdata/data-19-2-2013.json">Link zum Datendump</a></p>
+
+<h1 id="datensätze">Datensätze</h1>
+
+<p>Auf der GovData Plattform gibt es neben Datensätzen auch Dokumente und Apps. In dieser Zusammenfassung betrachte ich jedoch nur Datensätze.</p>
+
+<h2 id="unter-welchen-lizenzen-stehen-die-daten">Unter welchen Lizenzen stehen die Daten?</h2>
+
+<p>Aggregiert aus <code class="language-plaintext highlighter-rouge">result.license_id</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     dl-de-by-1.0: 759
+            cc-by: 265
+           odc-by: 82
+             None: 4
+     other-closed: 4
+         cc-by-sa: 3
+          cc-zero: 2
+official-work: 2
+            cc-nc: 1
+             gfdl: 1
+</code></pre></div></div>
+
+<ul>
+  <li>
+<strong>odc-by:</strong> Open Data Commons Namensnennung</li>
+  <li>
+<strong>cc-zero:</strong> Creative Commons Zero</li>
+  <li>
+<strong>cc-by:</strong> Creative Commons Namensnennung (CC-BY)</li>
+  <li>
+<strong>cc-by-sa:</strong> Creative Commons Attribution Weitergabe unter gleichen Bedingungen (CC-BY-SA)</li>
+  <li>
+<strong>cc-nc:</strong> Creative Commons Nicht-Kommerziell (CC-NC)</li>
+  <li>
+<strong>gfdl:</strong> GNU Free Documentation License</li>
+  <li>
+<strong>bsd:</strong> BSD Lizenz</li>
+  <li>
+<strong>dl-de-by-1.0:</strong> Datenlizenz Deutschland Namensnennung</li>
+  <li>
+<strong>official-work:</strong> Amtliches Werk, lizenzfrei nach §5 UrhG</li>
+  <li>
+<strong>other-closed:</strong> Andere eingeschränkte Lizenz</li>
+</ul>
+
+<h2 id="von-wem-stammen-die-daten">Von wem stammen die Daten?</h2>
+
+<p>Hier die Top-10 Liste der Datenbereitsteller, sortiert nach der Anzahl der bereitgestellten Datensätze.</p>
+
+<p>Aggregiert aus <code class="language-plaintext highlighter-rouge">result.author</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                   'Statistisches Bundesamt': 729
+'Senatorin für Finanzen, Zentrales IT-Management und E-Government': 89
+'Hansestadt Rostock – Kataster-, Vermessungs- und Liegenschaftsamt': 34
+                                        'Gemeinde Wennigsen': 30
+                                               'Stadt Moers': 27
+   'Senatsverwaltung für Wirtschaft, Technologie und Frauen': 24
+                            'Statistisches Landesamt Bremen': 19
+                  'Hansestadt Rostock – Hauptverwaltungsamt': 17
+                      'Amt für Statistik Berlin-Brandenburg': 15
+             'VBB - Verkehrsverbund Berlin-Brandenburg GmbH': 12
+</code></pre></div></div>
+
+<h1 id="ressourcen">Ressourcen</h1>
+
+<p>Ein Datensatz kann mehrere Ressourcen besitzen. Es gibt insgesamt 2551 Ressourcen.</p>
+
+<h2 id="in-welchen-formaten-liegen-die-daten-vor">In welchen Formaten liegen die Daten vor?</h2>
+
+<p>Dies ist eine Top-20 Liste der am öftesten verwendeten Formate. Formate sind dabei Ressourcen und nicht Datensätzen  zugeordnet, da ein Datensatz Ressourcen in unterschiedlichen Formaten besitzen kann.</p>
+
+<p>Aggregiert aus <code class="language-plaintext highlighter-rouge">result.resources.format</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>       'csv': 957
+       'xls': 815
+       'xml': 116
+      'json': 114
+       'wms': 88
+       'kml': 83
+       'gml': 78
+   'geojson': 72
+       'pdf': 37
+       'txt': 28
+      'html': 24
+       'kmz': 21
+ 'shapefile': 19
+       'gpx': 18
+      'jrss': 13
+       'rss': 13
+     'gjson': 10
+       'shp': 4
+       'doc': 3
+       'tms': 3
+</code></pre></div></div>
+
+  </div>
+
+  <div class="blog-links">
+  
+    <div>
+      <i class="fas fa-md fa-chevron-left"></i>
+      <a href="/blog/2013/02/meteowas.html" title="Previous Post: Meteo-was">Meteo-was</a>
+    </div>
+  
+  
+    <div>
+      <a href="/blog/2013/03/auf-nach-amerika.html" title="Next Post: ">Auf nach Amerika</a>
+      <i class="fas fa-md fa-chevron-right"></i>
+    </div>
+  
+  </div>
+</article>
+
+    </main>
+
+    <footer>
+  <div class="container">
+    <div class="footer-col">
+      Hello from Seattle.<br>
+      <abbr title="Last build on 2025-03-10">March 2025</abbr>
+    </div>
+    <div class="footer-col">
+      This template is based on <a href="https://github.com/domoritz/domoritz.github.io">Dominik Moritz's website</a>.
+    </div>
+    <div class="footer-col site-desc">HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+ I'm <a href="https://twitter.com/domoritz">@domoritz</a> on Twitter, <a rel="me" href="https://vis.social/@dom">@dom@vis.social</a> on the Fediverse, and <a href="https://bsky.app/profile/domoritz.de">@domoritz.de</a> on Bluesky.</div>
+  </div>
+</footer>
+
+    <script>
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+  var headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  for (var i=0; i<headers.length; i++) {
+    var h = headers[i];
+    var name = h.getAttribute("id");
+    var title = h.innerHTML;
+    h.innerHTML = '<a href="#' + name + '" class="anchor"><i class="fas fa-hashtag"></i></a>' + trim(title);
+  }
+</script>
+
+  </body>
+</html>

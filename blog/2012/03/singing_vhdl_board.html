@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="Sam Wong">
+  <meta name="theme-color" content="#b00">
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="250x250" />
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>The singing VHDL board | Sam Wong</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="The singing VHDL board" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ein Muskspieler mt Kartenleser programmiert" />
+<meta property="og:description" content="Ein Muskspieler mt Kartenleser programmiert" />
+<link rel="canonical" href="https://samw0627.github.io/blog/2012/03/singing_vhdl_board.html" />
+<meta property="og:url" content="https://samw0627.github.io/blog/2012/03/singing_vhdl_board.html" />
+<meta property="og:site_name" content="Sam Wong" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-03-27T13:59:57+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="The singing VHDL board" />
+<meta name="twitter:site" content="@domoritz" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2012-03-27T13:59:57+00:00","datePublished":"2012-03-27T13:59:57+00:00","description":"Ein Muskspieler mt Kartenleser programmiert","headline":"The singing VHDL board","mainEntityOfPage":{"@type":"WebPage","@id":"https://samw0627.github.io/blog/2012/03/singing_vhdl_board.html"},"url":"https://samw0627.github.io/blog/2012/03/singing_vhdl_board.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <link rel="alternate" type="application/rss+xml" title="Sam Wong" href="https://samw0627.github.io/feed.xml">
+
+  <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+  <body>
+    
+<header class="page-header">
+  <nav class="container">
+    <a class="site-title" href="/">Sam Wong</a>
+
+    <a href="/projects/">Projects</a>
+    <a href="/publications/">Publications</a>
+    <a href="/talks/">Talks</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+    <a href="/cv/">CV</a>
+
+    <span class="external">
+      <a href="https://bsky.app/profile/domoritz.de"><i class="fa-brands fa-bluesky" aria-hidden="true"></i> Bsky</a>
+      <a href="mailto:domoritz@cmu.edu"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
+    </span>
+  </nav>
+</header>
+
+
+    <main class="page-content">
+      <article class="container post">
+  <header class="post-header">
+    <h1 class="post-title">The singing VHDL board</h1>
+    <p class="post-subtitle">Ein Muskspieler mt Kartenleser programmiert</p>
+    <p class="post-meta">
+      Published on Mar 27, 2012
+      
+      
+      </p>
+  </header>
+
+  <div class="post-content">
+    <p>Nach 6 Monaten warten ist es so weit! Es lebt.</p>
+
+<p>Vor etwas mehr als 6 Monaten habe ich mit einem <a href="https://www.kaifabian.de/">Kommilitonen</a> angefangen an einem Musikplayer in VHDL zu arbeiten. Dadurch, dass wir im letzten Semester kaum Zeit gefunden haben, hat sich die Entwicklung etwas verzögert. Nichtsdestotrotz waren wir unheimlich stolz, als wir zum ersten Mal etwas hörten, was eine Melodie sein könnte und nach ein paar Bitoperationen auch richtige Musik hörten.</p>
+
+<p>Was ist denn nun sooooo toll an dem Player? Naja, einerseits ist alles in VHDL implementiert, das heißt, dass alles in Hardware läuft und wir uns wirklich um jedes Bit kümmern müssen. Andererseits haben wir wirklich alles selber implementieren müssen und konnten nicht auf ein Betriebssystem oder Programmbibliotheken zurückgreifen.</p>
+
+<p>Das Ganze haben wir auf einem Spartan 3 <a href="https://en.wikipedia.org/wiki/Fpga">FPGA</a> Board aufgebaut, an das wir über eine Schnittstelle einen SD/MMC Slot und einen <a href="https://en.wikipedia.org/wiki/Digital-to-analog_converter">DAC</a> mit einem Kopfhörerausgang angeschlossen haben. Die Musik ist liegt als unkomprimiertes <a href="https://en.wikipedia.org/wiki/Wav">WAV/RIFF</a> auf der Karte.</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/qsjFVgriZzY" frameborder="0" allowfullscreen=""></iframe>
+
+<p>Der Player besteht aus vier Hauptkomponenten. Als erstes gibt es einen MMC/SD Kartenleser, welcher das <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus">SPI</a> Protokoll zur Kommunikation mit der Karte implementiert. Dazu mussten wir uns durch die Dokumentation der Karten arbeiten und die verschiedenen Schritte zur Initialisierung der Karte, dem Senden von Befehlen und Empfangen von Datenblöcken implementieren. Da die Karte immer 512 Byte Blöcke auf einmal liefert und wir diesen nicht auf dem FPGA Chip speichern können (das sind immerhin 512*8 = 4096 Bit!) nutzen wir eine Blockram Fifo, die auf dem Board verbaut ist. Die Ausgangsseite der Fifo ist an eine weitere Komponente angeschlossen, die auch wieder per (dieses Mal sehr einfachen) SPI mit dem DAC kommuniziert. Der DAC wandelt dann eine digitale 12 Bit Zahl, die von der Karte durch die Fifo kam, in eine analoge Spannung um. Und das ist dann das, was der Kopfhörer oder Lautsprecher ausgibt.</p>
+
+<p>Besonders interessant fand ich bei der Entwicklung den MMC Kartenleser. Dabei hat uns besonders das Datenblatt von Samsung geholfen, dass du <a href="https://html.alldatasheet.com/html-pdf/141187/SAMSUNG/MC2GH512NMCA-2SA00/616/2/MC2GH512NMCA-2SA00.html">hier</a> finden kannst. Der Sourcecode ist auf <a href="https://github.com/domoritz/S76D">Github</a>. Wer also auch einen SD/MMC Kartenleser in VHDL bauen will, kann sich dann inspirieren lassen.</p>
+
+<p>Das Programm ist noch nicht ganz fertig und wir arbeiten gerade noch an der Tastatursteuerung per PS/3 Tastatur. Stay tuned.</p>
+
+  </div>
+
+  <div class="blog-links">
+  
+    <div>
+      <i class="fas fa-md fa-chevron-left"></i>
+      <a href="/blog/2012/03/shoppingtour-optimizer.html" title="Previous Post: Shopping tour Optimizer">Shopping tour Optimizer</a>
+    </div>
+  
+  
+    <div>
+      <a href="/blog/2012/04/utc-gmt-london-local.html" title="Next Post: ">UTC vs GMT vs London Local Time</a>
+      <i class="fas fa-md fa-chevron-right"></i>
+    </div>
+  
+  </div>
+</article>
+
+    </main>
+
+    <footer>
+  <div class="container">
+    <div class="footer-col">
+      Hello from Seattle.<br>
+      <abbr title="Last build on 2025-03-10">March 2025</abbr>
+    </div>
+    <div class="footer-col">
+      This template is based on <a href="https://github.com/domoritz/domoritz.github.io">Dominik Moritz's website</a>.
+    </div>
+    <div class="footer-col site-desc">HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+ I'm <a href="https://twitter.com/domoritz">@domoritz</a> on Twitter, <a rel="me" href="https://vis.social/@dom">@dom@vis.social</a> on the Fediverse, and <a href="https://bsky.app/profile/domoritz.de">@domoritz.de</a> on Bluesky.</div>
+  </div>
+</footer>
+
+    <script>
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+  var headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  for (var i=0; i<headers.length; i++) {
+    var h = headers[i];
+    var name = h.getAttribute("id");
+    var title = h.innerHTML;
+    h.innerHTML = '<a href="#' + name + '" class="anchor"><i class="fas fa-hashtag"></i></a>' + trim(title);
+  }
+</script>
+
+  </body>
+</html>

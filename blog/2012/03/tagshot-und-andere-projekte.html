@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="Sam Wong">
+  <meta name="theme-color" content="#b00">
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="250x250" />
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Tagshot und andere Projekte | Sam Wong</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Tagshot und andere Projekte" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Fotoverwaltung im Browser" />
+<meta property="og:description" content="Fotoverwaltung im Browser" />
+<link rel="canonical" href="https://samw0627.github.io/blog/2012/03/tagshot-und-andere-projekte.html" />
+<meta property="og:url" content="https://samw0627.github.io/blog/2012/03/tagshot-und-andere-projekte.html" />
+<meta property="og:site_name" content="Sam Wong" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-03-17T13:30:02+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tagshot und andere Projekte" />
+<meta name="twitter:site" content="@domoritz" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2012-03-17T13:30:02+00:00","datePublished":"2012-03-17T13:30:02+00:00","description":"Fotoverwaltung im Browser","headline":"Tagshot und andere Projekte","mainEntityOfPage":{"@type":"WebPage","@id":"https://samw0627.github.io/blog/2012/03/tagshot-und-andere-projekte.html"},"url":"https://samw0627.github.io/blog/2012/03/tagshot-und-andere-projekte.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <link rel="alternate" type="application/rss+xml" title="Sam Wong" href="https://samw0627.github.io/feed.xml">
+
+  <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+  <body>
+    
+<header class="page-header">
+  <nav class="container">
+    <a class="site-title" href="/">Sam Wong</a>
+
+    <a href="/projects/">Projects</a>
+    <a href="/publications/">Publications</a>
+    <a href="/talks/">Talks</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+    <a href="/cv/">CV</a>
+
+    <span class="external">
+      <a href="https://bsky.app/profile/domoritz.de"><i class="fa-brands fa-bluesky" aria-hidden="true"></i> Bsky</a>
+      <a href="mailto:domoritz@cmu.edu"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
+    </span>
+  </nav>
+</header>
+
+
+    <main class="page-content">
+      <article class="container post">
+  <header class="post-header">
+    <h1 class="post-title">Tagshot und andere Projekte</h1>
+    <p class="post-subtitle">Fotoverwaltung im Browser</p>
+    <p class="post-meta">
+      Published on Mar 17, 2012
+      
+      
+      </p>
+  </header>
+
+  <div class="post-content">
+    <p>In diesem Artikel möchte ich das Fotoverwaltungstool vorstellen, was treffenderweise <em>Tagshot</em> heißt.</p>
+
+<p>Das Programm habe ich mit vier Kommilitonen im Rahmen eines Studienseminars erstellt und soll dabei helfen, die große Anzahl an Photos, die am HPI aufgenommen werden, zu verwalten. Verwalten heißt dabei suchen, taggen, bewerten, herunterladen, löschen und auch nur einfach ansehen um gute Bilder zu finden.</p>
+
+<p>Wir haben das Tool bei uns am HPI bereits in Benutzung und haben etwa 10.000 Bilder in der Datenbank. Dabei ist beim Suchen keine Verzögerung spürbar.</p>
+
+<p>Ein wenig zur Technik. Das Backend ist in <a href="https://rubyonrails.org/">Ruby on Rails</a> geschrieben und sucht nach Bildern in einem bestimmten Verzeichnis. Die Metadaten der Bilder werden in eine Datenbank geschrieben (bei uns <a href="https://www.postgresql.org/">postgreSQL</a>) und Thumbnails erzeugt. Das Frontend ist eine einzige Seite, auf der mit JavaScript die Website dynamisch aufgebaut wird. Auch die gesamte Navigation findet auf einer Seite statt. Als Grundframework für das Frontend haben wir <a href="https://backbonejs.org/">Backbone.js</a> benutzt.</p>
+
+<p>Coole Features von Tagshot sind:</p>
+
+<ul>
+  <li>Taggen und bewerten von Bildern</li>
+  <li>Bilder nach Bewertung und Tags durchsuchen. Dabei können Boolesche Operatoren benutzt werden</li>
+  <li>Schnellvorschau</li>
+  <li>Unendliches Scrollen und dynamisches Nachladen von Bildern</li>
+  <li>Tastaturnavigation für schnelles Bearbeiten</li>
+  <li>Vergrößern/ Verkleinern der Ansicht</li>
+  <li>Detailansicht</li>
+  <li>Verschiedene Auflösungen herunterlade</li>
+  <li>Bearbeiten von mehreren Bildern gleichzeitig</li>
+  <li>Getestet in Webkit und Firefox</li>
+</ul>
+
+<p>Das Projektrepo (Git) und die Projektorganisation (Redmine) sind zur Zeit noch am HPI gehostet, werden aber bald auf <a href="https://github.com/tagshot/tagshot">https://github.com/tagshot/tagshot</a> umziehen. Das Projekt ist immer noch in der Entwicklung und einige Features fehlen noch (drehen von Bildern…), aber Tagshot ist trotzdem schon gut benutzbar und schnell.</p>
+
+<update>Die Quellen sind online auf [https://github.com/tagshot/tagshot](https://github.com/tagshot/tagshot)</update>
+
+<p>Auf Youtube gibt es kleines Demovideo, dass die wichtigsten Grundfunktionen zeigt.</p>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nB3fcDLNk8g" frameborder="0" allowfullscreen=""></iframe>
+
+  </div>
+
+  <div class="blog-links">
+  
+    <div>
+      <i class="fas fa-md fa-chevron-left"></i>
+      <a href="/blog/2011/10/7000000000.html" title="Previous Post: 7000000000">7000000000</a>
+    </div>
+  
+  
+    <div>
+      <a href="/blog/2012/03/shoppingtour-optimizer.html" title="Next Post: ">Shopping tour Optimizer</a>
+      <i class="fas fa-md fa-chevron-right"></i>
+    </div>
+  
+  </div>
+</article>
+
+    </main>
+
+    <footer>
+  <div class="container">
+    <div class="footer-col">
+      Hello from Seattle.<br>
+      <abbr title="Last build on 2025-03-10">March 2025</abbr>
+    </div>
+    <div class="footer-col">
+      This template is based on <a href="https://github.com/domoritz/domoritz.github.io">Dominik Moritz's website</a>.
+    </div>
+    <div class="footer-col site-desc">HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+ I'm <a href="https://twitter.com/domoritz">@domoritz</a> on Twitter, <a rel="me" href="https://vis.social/@dom">@dom@vis.social</a> on the Fediverse, and <a href="https://bsky.app/profile/domoritz.de">@domoritz.de</a> on Bluesky.</div>
+  </div>
+</footer>
+
+    <script>
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+  var headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  for (var i=0; i<headers.length; i++) {
+    var h = headers[i];
+    var name = h.getAttribute("id");
+    var title = h.innerHTML;
+    h.innerHTML = '<a href="#' + name + '" class="anchor"><i class="fas fa-hashtag"></i></a>' + trim(title);
+  }
+</script>
+
+  </body>
+</html>

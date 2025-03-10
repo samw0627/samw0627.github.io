@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://samw0627.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://samw0627.github.io/" rel="alternate" type="text/html" /><updated>2025-03-10T18:53:16+00:00</updated><id>https://samw0627.github.io/feed.xml</id><title type="html">Sam Wong</title><subtitle>HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+</subtitle><entry><title type="html">Applying for a PhD</title><link href="https://samw0627.github.io/phd-application/" rel="alternate" type="text/html" title="Applying for a PhD" /><published>2024-11-20T00:00:00+00:00</published><updated>2024-11-20T00:00:00+00:00</updated><id>https://samw0627.github.io/phd-application</id><content type="html" xml:base="https://samw0627.github.io/phd-application/"><![CDATA[<p>Here is my n=1 perspective on applying for a PhD in computer science at a research University. I think a PhD is awesome. It allows you to grow into a world-class researcher, push the boundaries of human knowledge, and connect with an international research community.</p>
+
+<p>If you want to do a PhD with me—awesome—please apply to the <abbr title="Human-Computer Interaction Institute">HCII</abbr> at <abbr title="Carnegie Mellon University">CMU</abbr>. I am looking forward to your application especially if you are from a non-traditional background! If you are curious about some general background on a PhD, read <a href="https://www.cs.cmu.edu/~harchol/gradschooltalk.pdf">this comprehensive summary</a>. If you email me about your application, note that I <a href="https://talkingtorobots.com/FAQ.html">may be unable to respond</a>.</p>
+
+<p>The PhD application process at top CS departments is highly competitive so it may help you to understand what I am prioritizing. Professor Eugene Wu has written about <a href="http://eugenewu.net/tips.html">goal-oriented applications</a>. The point I want to highlight is that your research statement should not be about what you have done or how my research interests you. It should provide evidence that you can do research in <a href="https://dig.cmu.edu">my lab</a> and convince me that you can maximize our research impact compared to other candidates. In practical terms, this means showing evidence of research potential (e.g., publications, research experience), describing a research vision, and getting strong recommendation letters. Professor Mike Ernst has <a href="https://homes.cs.washington.edu/~mernst/advice/apply-grad-school.html">great advice on applying to grad school</a>.</p>
+
+<p>Make sure you understand the admission process which differs between universities. For example, at the HCII, the department rather than the individual faculty decides on admission. Individual faculty still have a say in the admission so make sure to mention them in your application. You can learn more about <a href="https://hcii.cmu.edu/academics/phd-hci/admissions">how the HCII process works</a>.</p>
+
+<p>Professor Lace Padilla has a great <a href="https://www.youtube.com/playlist?list=PLe9dkYfBBHFkJUmqluDocwGuxaZ3y5Zkm">YouTube series on how to prepare an application and thrive in academia</a>. Other faculty will have their own advice.</p>
+
+<p>There is a lot of advice once you are in a PhD program on how to become a successful researcher but that’s for another day.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Applying for a PhD in computer science at a research University should be goal-oriented.]]></summary></entry><entry><title type="html">Scanning Photo Albums</title><link href="https://samw0627.github.io/blog/2021/01/photo-scans.html" rel="alternate" type="text/html" title="Scanning Photo Albums" /><published>2021-01-28T00:00:00+00:00</published><updated>2021-01-28T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2021/01/photo-scans</id><content type="html" xml:base="https://samw0627.github.io/blog/2021/01/photo-scans.html"><![CDATA[<p>As a millennial, most of my childhood is not recorded in digital photos but in videos on VHS tapes and photos albums that my parents have. I like flipping through digital photos and so I decided that it’s time to get all the pictures into digital form. Now the question is how? In this post I am showing that a simple flatbed scanner and some open source command line tools (Fred’s ImageMagick Scripts, ImageMagick/GraphicsMagick, Parallel, Exiftool, and standard UNIX tools) are fast and produce good quality images.</p>
+
+<h2 id="photo-scanner-apps-are-not-good-enough">Photo scanner apps are not good enough</h2>
+
+<p>My first idea was to use the good camera on my phone. I have seen apps such as <a href="https://www.google.com/photos/scan/">Google Photo Scan</a> that promise to avoid glare and other artifacts that you get if you just took a photo. I tried a few apps but none of them  worked. It takes forever to scan a single photo, there are artifacts on the images, and since pictures are not flat, the scans often come out distorted.</p>
+
+<h2 id="scanning-and-segmenting-images-with-image-capture-almost-worked">Scanning and segmenting images with Image Capture almost worked</h2>
+
+<p>My next idea was to use the flatbed scanner we already have in our multifunction printer. The scans are actually really good. The problem is that I don’t want to crop all images by hand. I have a mac and the <em>Image Capture</em> app (which already comes with macOS) has a decent cropping function. However, it uses the scanner preview (scanners typically show you a quick preview, then you decide which region to scan, and then they scan the selected region). The preview often isn’t good enough to properly segment the image so I decided to build my own segmentation pipeline with some open source tools.</p>
+
+<h2 id="a-pipeline-for-scanning-and-segmenting-dozens-of-photo-albums">A pipeline for scanning and segmenting dozens of photo albums</h2>
+
+<p>The following pipeline worked well for us. In short, we scan full pages, crop them with <code class="language-plaintext highlighter-rouge">multicrop</code>, then convert them to JPEG, and set the correct dates.</p>
+
+<p>First, we put as many pictures on the flatbed scanner as we can fit. Ideally, they are ordered from top-right, over to the left, to the bottom left when you put them on the scanner. This way they are in the correct order in the scanned image. Now, we scan the full page in 600 DPI (that’s my scanner’s max and it worked well) as TIFF. Scanning the full page means we don’t need a preview and can go through a photo album in half an hour.</p>
+
+<p>Now we have a folder full of scans such as this one scan.</p>
+
+<picture>
+<img src="/images/scan.jpg" width="300" alt="Four family pictures scanned in a single image" />
+</picture>
+
+<p>Note that all scans have the name <code class="language-plaintext highlighter-rouge">Combi_{}.tiff</code>. The rest of my scripts assume this name and so if you follow this post, make sure to set the right name in Image Capture.</p>
+
+<p>The next step is to segment the images. <a href="http://www.fmwconcepts.com/imagemagick/multicrop/index.php">Fred’s ImageMagick Scripts</a> are really good for this task. I downloaded and installed (copied into my path and made them executable) the <code class="language-plaintext highlighter-rouge">multicrop</code>, <code class="language-plaintext highlighter-rouge">unrotate</code>, and <code class="language-plaintext highlighter-rouge">autotrim</code> scripts. To avoid problems with spaces, I first replace all spaces with <code class="language-plaintext highlighter-rouge">_</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="nb">.</span> <span class="nt">-type</span> f <span class="nt">-name</span> <span class="s2">"*.tiff"</span> <span class="nt">-exec</span> rename <span class="s2">"s/</span><span class="se">\s</span><span class="s2">/_/g"</span> <span class="o">{}</span> <span class="se">\;</span>
+</code></pre></div></div>
+
+<p>Then I crop images with Multicrop, which is documented <a href="http://www.fmwconcepts.com/imagemagick/multicrop/index.php">here</a>. I don’t want to process the images one by one so I use <a href="https://www.gnu.org/software/parallel/">GNU parallel</a> to run 6 processes at the same time (might be different for you).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="nb">.</span> <span class="nt">-name</span> <span class="s2">"*.tiff"</span> | parallel <span class="nt">-j</span> 6 <span class="nt">--eta</span> <span class="nt">-q</span> multicrop <span class="nt">-c</span> 50,50 <span class="nt">-u</span> 2 <span class="nt">-m</span> save <span class="nt">-i</span> <span class="nb">yes</span> <span class="o">{}</span> <span class="o">{</span>/.<span class="o">}</span>_split.tiff
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-c 50,50</code> says where to find the background color for segmentation. 50 pixels off the top right corner worked well for me. <code class="language-plaintext highlighter-rouge">-u 2</code> uses a slightly better (but slower) algorithm to detect rotations. <code class="language-plaintext highlighter-rouge">-m save</code> saves the mask (for debugging purposes). <code class="language-plaintext highlighter-rouge">-i yes</code> trims the segmented images a bit so that we don’t get a white border.</p>
+
+<p>Multicrop runs some algorithms to find a mask such as this one.</p>
+
+<picture>
+<img src="/images/mask.png" width="200" alt="Red rectangles corresponding to the four images" />
+</picture>
+
+<p>Don’t worry if the masks are not perfect. Multicrop then uses the mask to find the images to segment and outputs segmented images such as these four.</p>
+
+<picture>
+<img src="/images/split.png" width="700" alt="Four images in finder" />
+</picture>
+
+<p>Multicrop takes a while to process images so you can grab a beverage of your choice while your computer is hard at work (such as mine was as you can see below).</p>
+
+<picture>
+<img src="/images/cpu.png" width="300" alt="CPU usage chart showing high CPU usage" />
+</picture>
+
+<h2 id="fixing-orientation-and-converting-to-jpeg">Fixing orientation and converting to JPEG</h2>
+
+<p>Now we have nicely segmented images but they are often incorrectly rotated, are still TIFFs, and they have the wrong dates. I corrected the orientation manually in Finder.</p>
+
+<p>Rotating images with Finder doesn’t always reliably rotate the images after processing so I had to apply the orientation change to the images. To do this and to then convert all images to JPEGs, I used <a href="http://www.graphicsmagick.org">GraphicsMagick</a> (ImageMagick also works).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gm mogrify <span class="nt">-auto-orient</span> <span class="k">*</span>_split-<span class="k">*</span>.tiff
+gm mogrify <span class="nt">-format</span> jpg <span class="nt">-quality</span> 90% <span class="k">*</span>_split-<span class="k">*</span>.tiff
+</code></pre></div></div>
+
+<h2 id="correcting-dates">Correcting dates</h2>
+
+<p>Next, I wanted to have correct dates in the images. However, I also wanted the images to have the correct order when I look at them in e.g. Apple Photos. My idea was to set the dates of the image to the correct date and to use the time to sort them correctly. To set the right time, I set it based on the file names (which are in the correct order).</p>
+
+<p>But first I made a folder for each set of images that I wanted to have the same date.</p>
+
+<p>My files are <code class="language-plaintext highlighter-rouge">Combi_{i}_split-{sss}.{tiff,jpg}</code> where <code class="language-plaintext highlighter-rouge">i</code> is a sequence number (e.g. 0, 12, or 32) and <code class="language-plaintext highlighter-rouge">sss</code> is a three digit number that identifies an image inside a scan. I set the minutes to <code class="language-plaintext highlighter-rouge">i</code> (by adding a leading 0 if needed and subtracting a start value so I don’t go over 59) and seconds to <code class="language-plaintext highlighter-rouge">s</code>. I assume that there are at most 8 images per scan and that there are at most 59 scans. Since I put all scans that should have the same date into one folder, this limitation hasn’t been a problem.</p>
+
+<p>I created the following bash script, which I called <code class="language-plaintext highlighter-rouge">setdatetimeoriginal</code> and put it in my path. It uses <a href="https://exiftool.org">Exiftool</a> to set the <code class="language-plaintext highlighter-rouge">DateTimeOriginal</code> EXIF property as described above.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="nv">start</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">end</span><span class="o">=</span><span class="nv">$2</span>
+<span class="nb">date</span><span class="o">=</span><span class="nv">$3</span>
+
+<span class="k">for </span>m <span class="k">in</span> <span class="si">$(</span><span class="nb">seq</span> <span class="nv">$start</span> <span class="nv">$end</span><span class="si">)</span>
+<span class="k">do
+    </span><span class="nb">echo</span> <span class="s2">"Setting dates for Combi_</span><span class="k">${</span><span class="nv">m</span><span class="k">}</span><span class="s2">_split-00*.*"</span>
+    <span class="nv">minutes</span><span class="o">=</span><span class="si">$(</span><span class="nb">printf</span> <span class="s2">"%02d"</span> <span class="k">$((</span><span class="nv">$m</span><span class="o">-</span><span class="nv">$start</span><span class="k">))</span><span class="si">)</span>
+    <span class="k">for </span>s <span class="k">in</span> <span class="si">$(</span><span class="nb">seq </span>0 8<span class="si">)</span>
+    <span class="k">do
+        </span><span class="nv">file</span><span class="o">=</span>Combi_<span class="k">${</span><span class="nv">m</span><span class="k">}</span>_split-00<span class="k">${</span><span class="nv">s</span><span class="k">}</span>
+        <span class="k">if </span><span class="nb">test</span> <span class="nt">-f</span> <span class="s2">"</span><span class="k">${</span><span class="nv">file</span><span class="k">}</span><span class="s2">.tiff"</span><span class="p">;</span> <span class="k">then
+            </span>exiftool <span class="s1">'-datetimeoriginal='</span><span class="s2">"</span><span class="k">${</span><span class="nv">date</span><span class="k">}</span><span class="s2">"</span><span class="s1">' 12:'</span><span class="s2">"</span><span class="k">${</span><span class="nv">minutes</span><span class="k">}</span><span class="s2">"</span><span class="s1">':'</span>0<span class="s2">"</span><span class="k">${</span><span class="nv">s</span><span class="k">}</span><span class="s2">"</span><span class="s1">''</span> <span class="nt">-overwrite_original</span> <span class="k">${</span><span class="nv">file</span><span class="k">}*</span>
+        <span class="k">fi
+    done
+done</span>
+</code></pre></div></div>
+
+<p>Now, I can run <code class="language-plaintext highlighter-rouge">setdatetimeoriginal 27 32 1990:10:15</code> to set the dates and order (by time) of all images in a folder. The output of the script looks something like this.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Setting dates for Combi_27_split-00*.*
+    2 image files updated
+    2 image files updated
+    2 image files updated
+    2 image files updated
+Setting dates for Combi_28_split-00*.*
+    2 image files updated
+    2 image files updated
+</code></pre></div></div>
+
+<p>That’s it. I am really happy with the results. I was especially impressed with the quality of the segmentations and hope that you find this post useful if you want to scan your family photos.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[How we are scanning dozens of photo albums and process them with open source tools]]></summary></entry><entry><title type="html">Draco: Representing, Applying &amp;amp; Learning Visualization Design</title><link href="https://samw0627.github.io/blog/2018/10/draco-representing-applying-learning-vis-design.html" rel="alternate" type="text/html" title="Draco: Representing, Applying &amp;amp; Learning Visualization Design" /><published>2018-10-22T00:00:00+00:00</published><updated>2018-10-22T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2018/10/draco-representing-applying-learning-vis-design</id><content type="html" xml:base="https://samw0627.github.io/blog/2018/10/draco-representing-applying-learning-vis-design.html"><![CDATA[<p>Jeff and I wrote a <a href="https://medium.com/@uwdata/draco-representing-applying-learning-visualization-design-guidelines-64ce20287e9d">blog post about Draco</a>.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[A blog post about our award winning paper.]]></summary></entry><entry><title type="html">How fast is fast enough?</title><link href="https://samw0627.github.io/blog/2018/09/interaction-speed.html" rel="alternate" type="text/html" title="How fast is fast enough?" /><published>2018-09-11T00:00:00+00:00</published><updated>2018-09-11T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2018/09/interaction-speed</id><content type="html" xml:base="https://samw0627.github.io/blog/2018/09/interaction-speed.html"><![CDATA[<p>To support effective exploration, visualization systems need to be fast. Liu and Heer showed <a href="https://idl.cs.washington.edu/papers/latency/">in their paper</a> that an additional latency of 500ms negatively affects the user’s behavior. They even found that the negative effects continue even after the delay is removed. Unfortunately, some system designers misunderstood the 500ms as a threshold that should be met. However, the paper only talks about the difference of low vs high latency and the goal should be low-latency.</p>
+
+<p>The paper also found that some interactions are more latency sensitive than others. For example, zooming is not as latency sensitive as panning. Sending a query through a form <a href="https://services.google.com/fh/files/blogs/google_delayexp.pdf">should return results quickly</a> but 60fps (16ms) is probably not quite necessary. So when you are designing a system, what latency should you aim for? Until we have further evidence for particular thresholds, we could use a guideline.</p>
+
+<p>As a rule of thumb, I am proposing that we require that <strong>latency should be lower than the shortest time between any two user queries</strong>. This rule is motivated by the fact that responses arrive before the user can send the next query. As an extreme example, in <a href="https://vega.github.io/vega/examples/crossfilter-flights/">crossfiltering</a> every movement of the brush fires a new query and delayed responses would display outdated information.</p>
+
+<p>I think this rule could provide a reasonable upper bound but not necessarily a lower bound. For example, just because it takes me a ten seconds to write a search query on Google, I would not want to wait ten seconds.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Rule of thumb for latency in interactive visualization.]]></summary></entry><entry><title type="html">Value-Suppressing Uncertainty Palettes</title><link href="https://samw0627.github.io/blog/2018/06/value-suppressing-uncertainty-palettes.html" rel="alternate" type="text/html" title="Value-Suppressing Uncertainty Palettes" /><published>2018-06-19T00:00:00+00:00</published><updated>2018-06-19T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2018/06/value-suppressing-uncertainty-palettes</id><content type="html" xml:base="https://samw0627.github.io/blog/2018/06/value-suppressing-uncertainty-palettes.html"><![CDATA[<p>Michael, Jeff and I wrote a <a href="https://medium.com/@uwdata/value-suppressing-uncertainty-palettes-426130122ce9">blog post about VSUPs</a>.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[A blog post about color palettes for uncertainty visualization.]]></summary></entry><entry><title type="html">Introducing Vega-Lite 2.0</title><link href="https://samw0627.github.io/blog/2017/10/vega-lite-2.html" rel="alternate" type="text/html" title="Introducing Vega-Lite 2.0" /><published>2017-10-31T00:00:00+00:00</published><updated>2017-10-31T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2017/10/vega-lite-2</id><content type="html" xml:base="https://samw0627.github.io/blog/2017/10/vega-lite-2.html"><![CDATA[<p>Ham, Arvind, Jeff and I wrote a <a href="https://medium.com/@uwdata/introducing-vega-lite-2-0-de6661c12d58">blog post about the release of Vega-Lite 2</a>.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[A blog post to announce the release of Vega-Lite 2.]]></summary></entry><entry><title type="html">Simple Sudoku Solver</title><link href="https://samw0627.github.io/blog/2016/08/simple-sudoku-solver.html" rel="alternate" type="text/html" title="Simple Sudoku Solver" /><published>2016-08-23T00:00:00+00:00</published><updated>2016-08-23T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2016/08/simple-sudoku-solver</id><content type="html" xml:base="https://samw0627.github.io/blog/2016/08/simple-sudoku-solver.html"><![CDATA[<p>I implemented a simple Sudoku solver to showcase forward checking and answer a <a href="https://stackoverflow.com/questions/1697334/algorithm-for-solving-sudoku/35500280#35500280">Stack Overflow question</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">from</span> <span class="n">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+
+<span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">sys</span><span class="p">.</span><span class="n">stdout</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">9</span>
+
+<span class="c1"># just need propagation
+# field = [
+#     [5, 1, 7, 6, 0, 0, 0, 3, 4],
+#     [2, 8, 9, 0, 0, 4, 0, 0, 0],
+#     [3, 4, 6, 2, 0, 5, 0, 9, 0],
+#     [6, 0, 2, 0, 0, 0, 0, 1, 0],
+#     [0, 3, 8, 0, 0, 6, 0, 4, 7],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 9, 0, 0, 0, 0, 0, 7, 8],
+#     [7, 0, 3, 4, 0, 0, 5, 6, 0],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0],
+# ]
+</span>
+<span class="c1"># less constrained example
+# field = [
+#     [0, 0, 0, 0, 0, 0, 0, 1, 2],
+#     [0, 0, 0, 0, 3, 5, 0, 0, 0],
+#     [0, 0, 0, 6, 0, 0, 0, 7, 0],
+#     [7, 0, 0, 0, 0, 0, 3, 0, 0],
+#     [0, 0, 0, 4, 0, 0, 8, 0, 0],
+#     [1, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 1, 2, 0, 0, 0, 0],
+#     [0, 8, 0, 0, 0, 0, 0, 4, 0],
+#     [0, 5, 0, 0, 0, 0, 6, 0, 0],
+# ]
+</span>
+<span class="c1"># world's hardest sudoku
+# http://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html
+</span><span class="n">field</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">print_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Print a sudoku field. </span><span class="sh">"""</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cell</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+                <span class="nf">output</span><span class="p">(</span><span class="sh">"</span><span class="s">.</span><span class="sh">"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nf">output</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+            <span class="nf">if </span><span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="nf">output</span><span class="p">(</span><span class="sh">"</span><span class="s"> |</span><span class="sh">"</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="nf">output</span><span class="p">(</span><span class="sh">"</span><span class="s"> </span><span class="sh">"</span><span class="p">)</span>
+        <span class="nf">output</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+        <span class="nf">if </span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="nf">output</span><span class="p">(</span><span class="sh">"</span><span class="s">- - - + - - - + - - -</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Read field into state (replace 0/None with set of possible values). </span><span class="sh">"""</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cell</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">cell</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="nf">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">state</span>
+
+
+<span class="n">state</span> <span class="o">=</span> <span class="nf">read</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Are we done? </span><span class="sh">"""</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">propagate_step</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
+    Propagate one step.
+    
+    @return:  A two-tuple that says whether the configuration is solvable and whether the propagation changed the state.
+    </span><span class="sh">"""</span>
+
+    <span class="n">new_units</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="c1"># propagate row rule
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nf">set</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span> <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">set</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="nb">set</span><span class="p">):</span>
+                <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">values</span>
+                <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="nf">pop</span><span class="p">()</span>
+                    <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">values</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">new_units</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span>
+
+    <span class="c1"># propagate column rule
+</span>    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nf">set</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">column</span> <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">set</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="nb">set</span><span class="p">):</span>
+                <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">values</span>
+                <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="nf">pop</span><span class="p">()</span>
+                    <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">values</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="n">new_units</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span>
+
+    <span class="c1"># propagate cell rule
+</span>    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nf">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span><span class="p">):</span>
+                    <span class="n">cell</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+                        <span class="n">values</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="nb">set</span><span class="p">):</span>
+                        <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">values</span>
+                        <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">val</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="nf">pop</span><span class="p">()</span>
+                            <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                            <span class="n">values</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                            <span class="n">new_units</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="k">elif</span> <span class="nf">len</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">new_units</span>
+
+
+<span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Propagate until we reach a fixpoint. </span><span class="sh">"""</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">solvable</span><span class="p">,</span> <span class="n">new_unit</span> <span class="o">=</span> <span class="nf">propagate_step</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_unit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+
+<span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Solve sudoku </span><span class="sh">"""</span>
+
+    <span class="n">solvable</span> <span class="o">=</span> <span class="nf">propagate</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">solvable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">if</span> <span class="nf">done</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cell</span><span class="p">:</span>
+                    <span class="n">new_state</span> <span class="o">=</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+                    <span class="n">new_state</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="n">solved</span> <span class="o">=</span> <span class="nf">solve</span><span class="p">(</span><span class="n">new_state</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">solved</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">solved</span>
+                <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="nf">print_field</span><span class="p">(</span><span class="nf">solve</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+</code></pre></div></div>]]></content><author><name></name></author><summary type="html"><![CDATA[A simple Sudoku solver with forward checking in Python]]></summary></entry><entry><title type="html">Introducing Vega-Lite</title><link href="https://samw0627.github.io/blog/2016/02/vega-lite.html" rel="alternate" type="text/html" title="Introducing Vega-Lite" /><published>2016-02-23T00:00:00+00:00</published><updated>2016-02-23T00:00:00+00:00</updated><id>https://samw0627.github.io/blog/2016/02/vega-lite</id><content type="html" xml:base="https://samw0627.github.io/blog/2016/02/vega-lite.html"><![CDATA[<p>Ham, Jeff and I wrote a <a href="https://medium.com/hci-design-at-uw/introducing-vega-lite-438f9215f09e">blog post to announce Vega-Lite</a>.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[A blog post to announce Vega-Lite.]]></summary></entry><entry><title type="html">Code retreats improve coding abilities</title><link href="https://samw0627.github.io/blog/2014/09/code-retreat.html" rel="alternate" type="text/html" title="Code retreats improve coding abilities" /><published>2014-09-29T23:55:44+00:00</published><updated>2014-09-29T23:55:44+00:00</updated><id>https://samw0627.github.io/blog/2014/09/code-retreat</id><content type="html" xml:base="https://samw0627.github.io/blog/2014/09/code-retreat.html"><![CDATA[<p>This summer, I was at Google in NYC for an awesome internship. However, in this post I want to talk about a <a href="http://coderetreat.org/">Code Retreat</a> that somebody at Google organized. The idea is simple: Pair up a bunch of programmers and give them a simple programming task that they can solve as a pair in any language but with a time constraint. Repeat this for a whole day for maximum fun. Each iteration may add <a href="http://coderetreat.org/facilitating/activity-catalog">additional constraints</a> on how the team should work together or what programming constructs they are allowed to use. It’s a great opportunity to learn from each other and from the experience of solving the same problem over and over again and bringing your program to perfection.</p>
+
+<p>We used <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway’s Game of Life</a> throughout the day and I’ve grown to like it a lot. I just wanted to share my simple <a href="https://github.com/domoritz/gameoflife-python">implementation in Python</a> and my <a href="https://github.com/domoritz/gameoflife-go">first program in Go</a>.</p>
+
+<p><strong>Update:</strong> I have since implement the Game of Live in Rust and C# and might add more in the future. The <a href="https://github.com/domoritz?utf8=%E2%9C%93&amp;tab=repositories&amp;q=gameoflife">code is on GitHub</a>.</p>]]></content><author><name></name></author><category term="Programming" /><category term="go" /><category term="python" /><summary type="html"><![CDATA[Game of Life in Python and Go]]></summary></entry><entry><title type="html">Data visualizations</title><link href="https://samw0627.github.io/blog/2014/03/data-visualizations.html" rel="alternate" type="text/html" title="Data visualizations" /><published>2014-03-24T06:50:21+00:00</published><updated>2014-03-24T06:50:21+00:00</updated><id>https://samw0627.github.io/blog/2014/03/data-visualizations</id><content type="html" xml:base="https://samw0627.github.io/blog/2014/03/data-visualizations.html"><![CDATA[<p>During the spring quarter at UW, I took Jeffrey Heer’s <a href="https://courses.cs.washington.edu/courses/cse512/14wi/index.html">data visualization class</a>. As part of this class, I worked on three assignments and a final project of which I would like to share the first two assignments.</p>
+
+<p>In the <a href="https://courses.cs.washington.edu/courses/cse512/14wi/a1.html">first assignment</a> we had to design a visualization for Burtin’s antibiotics dataset. The task was to design a visualization without any knowledge from the class. Here is what I created:</p>
+
+<iframe src="https://domoritz.github.io/vis-a1/" width="100%" height="600px"></iframe>
+
+<p>I created the static visualization with D3. The code is on <a href="https://github.com/domoritz/vis-a1">GitHub</a>.</p>
+
+<p>For the <a href="https://courses.cs.washington.edu/courses/cse512/14wi/a2.html">second assignment</a>, we could choose between different datasets to visualize. I chose the FAA flight data and wanted to answer the question whether airlines overestimate the flight times in order to avoid having bad on-time records. TL;DR, the answer is yes.</p>
+
+<p><a href="/images/a2-domoritz.png"><img src="/images/a2-domoritz.png" alt="Airlines overestimate flight times." /></a></p>
+
+<p>The data in this plot is based on 1.4GB of flight records for one month each year since 1987. I created the plot with Tableau.</p>
+
+<p>Not as part of the class but during the <a href="https://opendataday.org/">Open Data Day</a>, I worked on a <a href="https://domoritz.github.io/live-bus-seattle">live map of bus locations in Seattle</a>.</p>]]></content><author><name></name></author><category term="UW" /><category term="visualization" /><summary type="html"><![CDATA[CSE512 at UW and other projects]]></summary></entry></feed>

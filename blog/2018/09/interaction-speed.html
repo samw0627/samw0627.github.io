@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="application-name" content="Sam Wong">
+  <meta name="theme-color" content="#b00">
+  <link rel="shortcut icon" href="/favicon.ico"/>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="250x250" />
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>How fast is fast enough? | Sam Wong</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="How fast is fast enough?" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Rule of thumb for latency in interactive visualization." />
+<meta property="og:description" content="Rule of thumb for latency in interactive visualization." />
+<link rel="canonical" href="https://samw0627.github.io/blog/2018/09/interaction-speed.html" />
+<meta property="og:url" content="https://samw0627.github.io/blog/2018/09/interaction-speed.html" />
+<meta property="og:site_name" content="Sam Wong" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-09-11T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How fast is fast enough?" />
+<meta name="twitter:site" content="@domoritz" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2018-09-11T00:00:00+00:00","datePublished":"2018-09-11T00:00:00+00:00","description":"Rule of thumb for latency in interactive visualization.","headline":"How fast is fast enough?","mainEntityOfPage":{"@type":"WebPage","@id":"https://samw0627.github.io/blog/2018/09/interaction-speed.html"},"url":"https://samw0627.github.io/blog/2018/09/interaction-speed.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <link rel="alternate" type="application/rss+xml" title="Sam Wong" href="https://samw0627.github.io/feed.xml">
+
+  <link href="https://use.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+  <body>
+    
+<header class="page-header">
+  <nav class="container">
+    <a class="site-title" href="/">Sam Wong</a>
+
+    <a href="/projects/">Projects</a>
+    <a href="/publications/">Publications</a>
+    <a href="/talks/">Talks</a>
+    <a href="/blog/" aria-current="page">Blog</a>
+    <a href="/cv/">CV</a>
+
+    <span class="external">
+      <a href="https://bsky.app/profile/domoritz.de"><i class="fa-brands fa-bluesky" aria-hidden="true"></i> Bsky</a>
+      <a href="mailto:domoritz@cmu.edu"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
+    </span>
+  </nav>
+</header>
+
+
+    <main class="page-content">
+      <article class="container post">
+  <header class="post-header">
+    <h1 class="post-title">How fast is fast enough?</h1>
+    <p class="post-subtitle">Rule of thumb for latency in interactive visualization.</p>
+    <p class="post-meta">
+      Published on Sep 11, 2018
+      
+      
+      </p>
+  </header>
+
+  <div class="post-content">
+    <p>To support effective exploration, visualization systems need to be fast. Liu and Heer showed <a href="https://idl.cs.washington.edu/papers/latency/">in their paper</a> that an additional latency of 500ms negatively affects the user’s behavior. They even found that the negative effects continue even after the delay is removed. Unfortunately, some system designers misunderstood the 500ms as a threshold that should be met. However, the paper only talks about the difference of low vs high latency and the goal should be low-latency.</p>
+
+<p>The paper also found that some interactions are more latency sensitive than others. For example, zooming is not as latency sensitive as panning. Sending a query through a form <a href="https://services.google.com/fh/files/blogs/google_delayexp.pdf">should return results quickly</a> but 60fps (16ms) is probably not quite necessary. So when you are designing a system, what latency should you aim for? Until we have further evidence for particular thresholds, we could use a guideline.</p>
+
+<p>As a rule of thumb, I am proposing that we require that <strong>latency should be lower than the shortest time between any two user queries</strong>. This rule is motivated by the fact that responses arrive before the user can send the next query. As an extreme example, in <a href="https://vega.github.io/vega/examples/crossfilter-flights/">crossfiltering</a> every movement of the brush fires a new query and delayed responses would display outdated information.</p>
+
+<p>I think this rule could provide a reasonable upper bound but not necessarily a lower bound. For example, just because it takes me a ten seconds to write a search query on Google, I would not want to wait ten seconds.</p>
+
+  </div>
+
+  <div class="blog-links">
+  
+    <div>
+      <i class="fas fa-md fa-chevron-left"></i>
+      <a href="/blog/2018/06/value-suppressing-uncertainty-palettes.html" title="Previous Post: Value-Suppressing Uncertainty Palettes">Value-Suppressing Uncertainty Palettes</a>
+    </div>
+  
+  
+    <div>
+      <a href="/blog/2018/10/draco-representing-applying-learning-vis-design.html" title="Next Post: ">Draco: Representing, Applying &amp; Learning Visualization Design</a>
+      <i class="fas fa-md fa-chevron-right"></i>
+    </div>
+  
+  </div>
+</article>
+
+    </main>
+
+    <footer>
+  <div class="container">
+    <div class="footer-col">
+      Hello from Seattle.<br>
+      <abbr title="Last build on 2025-03-10">March 2025</abbr>
+    </div>
+    <div class="footer-col">
+      This template is based on <a href="https://github.com/domoritz/domoritz.github.io">Dominik Moritz's website</a>.
+    </div>
+    <div class="footer-col site-desc">HCI researcher at Social Futures Lab, Paul.G. Allen School of Computer Science &amp; Engineering, University of Washington.
+ I'm <a href="https://twitter.com/domoritz">@domoritz</a> on Twitter, <a rel="me" href="https://vis.social/@dom">@dom@vis.social</a> on the Fediverse, and <a href="https://bsky.app/profile/domoritz.de">@domoritz.de</a> on Bluesky.</div>
+  </div>
+</footer>
+
+    <script>
+  function trim(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+  var headers = document.querySelectorAll("h2, h3, h4, h5, h6");
+  for (var i=0; i<headers.length; i++) {
+    var h = headers[i];
+    var name = h.getAttribute("id");
+    var title = h.innerHTML;
+    h.innerHTML = '<a href="#' + name + '" class="anchor"><i class="fas fa-hashtag"></i></a>' + trim(title);
+  }
+</script>
+
+  </body>
+</html>

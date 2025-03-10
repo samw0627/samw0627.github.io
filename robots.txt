@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /octopress/
+
+Sitemap: https://samw0627.github.io/sitemap.xml

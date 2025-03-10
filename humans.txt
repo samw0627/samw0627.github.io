@@ -1,0 +1,11 @@
+/* TEAM */
+	Author/Theme: Sam Wong
+	Twitter: @domoritz
+	Mastodon: @dom@vis.social
+	From: Pittsburgh, PA
+
+/* SITE */
+	Language: English / German
+	Doctype: HTML5
+	IDE: Sublime Text, VIM, VSCode
+	Software: Jekyll
