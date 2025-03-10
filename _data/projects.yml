@@ -5,10 +5,10 @@
   paper: /papers/2018-Draco-InfoVis.pdf
   DOI: https://dl.acm.org/doi/10.1145/3654777.3676347
   #recording: https://vimeo.com/308980888
-  image: vizgroup.jpg
+  image: vizgroup.png
   description: "Vizgroup is an LLMs-assisted system for real-time collaborative learning analytics, visualizes student performance and
 collaboration via a dynamic 2D scatter plot and provides proactive notifications for timely interventions."
-  #highlight: 1
+  highlight: 1
 
 - title: VizPI
   url: https://vizpi.org/
@@ -16,13 +16,18 @@ collaboration via a dynamic 2D scatter plot and provides proactive notifications
   paper: /papers/2018-Draco-InfoVis.pdf
   DOI: https://dl.acm.org/doi/10.1145/3586182.3616632
   #recording: https://vimeo.com/308980888
-  image: vizpi.jpg
+  image: vizpi.png
   description: "VizPI is a system that helps instructors understand and monitor student's group discussion in real time."
-  #highlight: 1
+  highlight: 2
 
 - title: SPHERE
   url: https://www.cs.washington.edu/research/sphere/
-  image: sphere.jpg
+  image: sphere.png
   description: "SPHERE is a system that helps instructors to give feedback to students at scale."
   #highlight: 1
+
+- title: SmartDrop
+  image: smartdrop.png
+  description: "Smartdrop is an accessible eyedrop dispenser for people with low vision and motor disabilities."
+  highlight: 3
 
