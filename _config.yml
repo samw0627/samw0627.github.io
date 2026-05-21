@@ -14,6 +14,7 @@ twitter:
 
 sass:
   style: compressed
+  sass_dir: _sass
 
 collections:
   publications:
@@ -21,8 +22,6 @@ collections:
 
 jekyll-mentions:
   base_url: https://twitter.com
-
-theme: jekyll-theme-minimal  # or your preferred theme
 
 plugins:
   - jekyll-sitemap
