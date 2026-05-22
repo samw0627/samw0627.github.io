@@ -82,3 +82,49 @@ video {
   max-width: 100%;
   height: auto;
 }
+
+/* ─── Entrance animations ─────────────────────────────── */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero elements animate on page load with staggered delays */
+.anim-1 { animation: fadeUp 0.55s ease 0.05s both; }
+.anim-2 { animation: fadeUp 0.55s ease 0.15s both; }
+.anim-3 { animation: fadeUp 0.55s ease 0.25s both; }
+.anim-4 { animation: fadeUp 0.55s ease 0.35s both; }
+.anim-5 { animation: fadeUp 0.55s ease 0.45s both; }
+
+/* ─── Scroll reveal ───────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Responsive hero ─────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .hero-row {
+    flex-direction: column-reverse !important;
+    gap: 32px !important;
+  }
+  .hero-photo {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}
