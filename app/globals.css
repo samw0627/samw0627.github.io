@@ -118,13 +118,20 @@ video {
 
 /* ─── Responsive hero ─────────────────────────────────── */
 
+/* ─── Hero photo ──────────────────────────────────────── */
+
+.hero-photo img {
+  width: clamp(160px, 20vw, 260px);
+  height: clamp(160px, 20vw, 260px);
+  object-fit: cover;
+  border-radius: var(--radius-images);
+  display: block;
+  box-shadow: var(--shadow-subtle);
+}
+
 @media (max-width: 640px) {
   .hero-row {
     flex-direction: column-reverse !important;
     gap: 32px !important;
-  }
-  .hero-photo {
-    width: 120px !important;
-    height: 120px !important;
   }
 }

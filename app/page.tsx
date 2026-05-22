@@ -127,7 +127,7 @@ export default async function HomePage() {
           style={{
             display: "flex",
             gap: 64,
-            alignItems: "flex-start",
+            alignItems: "center",
           }}
         >
           {/* Left: text */}
@@ -249,18 +249,10 @@ export default async function HomePage() {
             <Image
               src="/images/sam_wong.webp"
               alt="Sam Wong"
-              width={200}
-              height={200}
+              width={260}
+              height={260}
               priority
               unoptimized
-              style={{
-                width: 180,
-                height: 180,
-                borderRadius: "var(--radius-images)",
-                objectFit: "cover",
-                display: "block",
-                boxShadow: "var(--shadow-subtle)",
-              }}
             />
           </div>
         </div>
