@@ -46,7 +46,7 @@ class: pubs
 </p>
 
 {% assign pubyears = site.publications | group_by:"year"  %}
-{% assign sorted_pubyears = pubyears | reverse %}
+{% assign sorted_pubyears = pubyears | sort: "name" | reverse %}
 {% for year in sorted_pubyears %}
 ## {{ year.name }}
 {:#y{{ year.name }} .year}
