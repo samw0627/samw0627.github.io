@@ -19,14 +19,15 @@ export default function NavLink({ href, children }: NavLinkProps) {
     <Link
       href={href}
       style={{
-        fontSize: "var(--text-body-sm)",
-        letterSpacing: "-0.04em",
-        padding: "6px 12px",
-        borderRadius: "var(--radius-navitems)",
-        backgroundColor: isActive ? "var(--color-forest-dew)" : "transparent",
-        color: isActive ? "var(--color-valley-green)" : "var(--color-adaline-ink)",
-        fontWeight: isActive ? 700 : 400,
-        transition: "background-color 0.15s ease, color 0.15s ease",
+        fontSize: "var(--text-nav)",
+        letterSpacing: 0,
+        color: isActive ? "var(--color-text-primary)" : "var(--color-text-secondary)",
+        fontWeight: 400,
+        transition: "color 150ms ease",
+        paddingBottom: isActive ? "2px" : "2px",
+        borderBottom: isActive
+          ? "1.5px solid var(--color-accent)"
+          : "1.5px solid transparent",
       }}
     >
       {children}

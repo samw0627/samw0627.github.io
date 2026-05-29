@@ -16,14 +16,15 @@ function AwardBadge({ award }: { award: string }) {
         display: "inline-flex",
         alignItems: "center",
         gap: 4,
-        fontSize: "var(--text-caption)",
-        fontFamily: "var(--font-fragmentmono)",
-        letterSpacing: "0.02em",
-        color: isBestPaper ? "#7a5200" : "var(--color-valley-green)",
-        backgroundColor: isBestPaper ? "#fff8e6" : "var(--color-forest-dew)",
+        fontFamily: "var(--font-mono)",
+        fontSize: "var(--text-label)",
+        fontWeight: 500,
+        letterSpacing: "0.04em",
+        color: isBestPaper ? "#7a5200" : "var(--color-accent)",
+        backgroundColor: isBestPaper ? "#fff8e6" : "transparent",
         padding: "2px 8px",
-        borderRadius: 999,
-        border: isBestPaper ? "1px solid #f0d080" : "1px solid var(--color-stone-moss)",
+        borderRadius: "var(--radius-sm)",
+        border: isBestPaper ? "1px solid #f0d080" : "1px solid var(--color-accent)",
       }}
     >
       {isBestPaper ? "🏆" : "🏅"} {award}
@@ -39,11 +40,15 @@ function AuthorList({
   people: Record<string, Person>;
 }) {
   return (
-    <span style={{ color: "var(--color-mist-gray)", fontSize: "var(--text-body-sm)" }}>
+    <span style={{ color: "var(--color-text-secondary)", fontSize: "var(--text-small)" }}>
       {authors.map((name, i) => {
         const person = people[name];
         const isMe = person?.me === true;
-        const inner = isMe ? <strong>{name}</strong> : name;
+        const inner = isMe ? (
+          <span style={{ fontWeight: 500, color: "var(--color-text-primary)" }}>{name}</span>
+        ) : (
+          <span>{name}</span>
+        );
         const linked =
           person?.url ? (
             <a
@@ -51,7 +56,11 @@ function AuthorList({
               href={person.url}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ textDecoration: "underline", textDecorationColor: "var(--color-stone-moss)" }}
+              style={{
+                textDecoration: "underline",
+                textDecorationColor: "var(--color-border)",
+                textUnderlineOffset: 2,
+              }}
             >
               {inner}
             </a>
@@ -69,28 +78,24 @@ function AuthorList({
   );
 }
 
-function PubLink({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}) {
+function PubLink({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      className="pub-link"
       style={{
-        fontSize: "var(--text-caption)",
-        fontFamily: "var(--font-fragmentmono)",
-        letterSpacing: "0.02em",
-        color: "var(--color-valley-green)",
-        border: "1px solid var(--color-stone-moss)",
-        borderRadius: 999,
-        padding: "2px 10px",
+        fontFamily: "var(--font-mono)",
+        fontSize: "var(--text-label)",
+        fontWeight: 500,
+        letterSpacing: "0.04em",
+        color: "var(--color-accent)",
+        border: "1px solid var(--color-accent)",
+        borderRadius: "var(--radius-sm)",
+        padding: "2px 8px",
         textDecoration: "none",
-        transition: "background-color 0.15s ease",
+        transition: "background-color 150ms ease, color 150ms ease",
       }}
     >
       {label}
@@ -113,95 +118,108 @@ export default function PublicationCard({
   return (
     <article
       style={{
-        paddingBottom: compact ? "var(--spacing-16)" : "var(--spacing-24)",
-        borderBottom: "1px solid var(--color-stone-moss)",
+        paddingTop: compact ? "var(--space-3)" : "var(--space-4)",
+        paddingBottom: compact ? "var(--space-3)" : "var(--space-4)",
+        borderBottom: `1px solid ${compact ? "var(--color-border-faint)" : "var(--color-border)"}`,
         display: "flex",
-        flexDirection: "column",
-        gap: 6,
+        gap: 20,
       }}
     >
-      {pub.awards && pub.awards.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-          {pub.awards.map((a) => (
-            <AwardBadge key={a} award={a} />
-          ))}
-        </div>
-      )}
-
-      <h3
-        style={{
-          margin: 0,
-          fontSize: compact ? "var(--text-body)" : "var(--text-body)",
-          fontWeight: 700,
-          lineHeight: 1.3,
-          letterSpacing: "-0.04em",
-        }}
-      >
-        {pub.link ? (
-          <a
-            href={pub.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "inherit" }}
-          >
-            {pub.title}
-          </a>
-        ) : (
-          pub.title
+      {/* Main content */}
+      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 5 }}>
+        {pub.awards && pub.awards.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 4 }}>
+            {pub.awards.map((a) => (
+              <AwardBadge key={a} award={a} />
+            ))}
+          </div>
         )}
-      </h3>
 
-      <AuthorList authors={pub.authors} people={people} />
-
-      <div
-        style={{
-          fontSize: "var(--text-body-sm)",
-          color: "var(--color-mist-gray)",
-        }}
-      >
-        {pub.venueUrl ? (
-          <a
-            href={pub.venueUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ textDecoration: "underline", textDecorationColor: "var(--color-stone-moss)" }}
+        {pub.venue && (
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-label)",
+              fontWeight: 500,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              color: "var(--color-text-tertiary)",
+            }}
           >
-            {pub.venue}
-          </a>
-        ) : (
-          <span>{pub.venue}</span>
+            {pub.venue}{pub.venueLocation ? ` · ${pub.venueLocation}` : ""}
+          </span>
         )}
-        {pub.venueLocation && <span> &middot; {pub.venueLocation}</span>}
-        <span> &middot; {pub.year}</span>
-      </div>
 
-      {!compact && pub.summary && (
-        <p
+        <h3
           style={{
             margin: 0,
-            fontSize: "var(--text-body-sm)",
-            color: "var(--color-adaline-ink)",
-            lineHeight: 1.5,
+            fontSize: "var(--text-body)",
+            fontWeight: 600,
+            lineHeight: 1.3,
+            letterSpacing: 0,
           }}
         >
-          {pub.summary}
-        </p>
-      )}
+          {pub.link ? (
+            <a
+              href={pub.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pub-title-link"
+              style={{
+                color: "inherit",
+                transition: "color 150ms ease",
+              }}
+            >
+              {pub.title}
+            </a>
+          ) : (
+            pub.title
+          )}
+        </h3>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 2 }}>
-        {pdfUrl && <PubLink href={pdfUrl} label="PDF" />}
-        {arxivUrl && !pub.pdf && <PubLink href={arxivUrl} label="arXiv" />}
-        {pub.html && <PubLink href={pub.html} label="HTML" />}
-        {pub.link && <PubLink href={pub.link} label="Project" />}
-        {pub.video && <PubLink href={pub.video} label="Video" />}
-        {pub.recording && <PubLink href={pub.recording} label="Recording" />}
-        {pub.slides && <PubLink href={pub.slides} label="Slides" />}
-        {pub.doi && (
-          <PubLink href={`https://doi.org/${pub.doi}`} label="DOI" />
+        <AuthorList authors={pub.authors} people={people} />
+
+        {!compact && pub.summary && (
+          <p
+            style={{
+              margin: "4px 0 0",
+              fontSize: "var(--text-small)",
+              color: "var(--color-text-primary)",
+              lineHeight: 1.6,
+            }}
+          >
+            {pub.summary}
+          </p>
         )}
-        {pub.osf && (
-          <PubLink href={`https://osf.io/${pub.osf}`} label="OSF" />
-        )}
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+          {pdfUrl && <PubLink href={pdfUrl} label="PDF" />}
+          {arxivUrl && !pub.pdf && <PubLink href={arxivUrl} label="arXiv" />}
+          {pub.html && <PubLink href={pub.html} label="HTML" />}
+          {pub.link && <PubLink href={pub.link} label="Project" />}
+          {pub.video && <PubLink href={pub.video} label="Video" />}
+          {pub.recording && <PubLink href={pub.recording} label="Recording" />}
+          {pub.slides && <PubLink href={pub.slides} label="Slides" />}
+          {pub.doi && (
+            <PubLink href={`https://doi.org/${pub.doi}`} label="DOI" />
+          )}
+          {pub.osf && (
+            <PubLink href={`https://osf.io/${pub.osf}`} label="OSF" />
+          )}
+        </div>
+      </div>
+
+      {/* Year column */}
+      <div
+        style={{
+          fontSize: "var(--text-small)",
+          color: "var(--color-text-tertiary)",
+          whiteSpace: "nowrap",
+          flexShrink: 0,
+          paddingTop: pub.venue ? "22px" : "2px",
+        }}
+      >
+        {pub.year}
       </div>
     </article>
   );

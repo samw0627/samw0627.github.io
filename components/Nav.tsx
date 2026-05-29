@@ -13,8 +13,8 @@ export default function Nav() {
   return (
     <header
       style={{
-        backgroundColor: "var(--color-canvas-ice)",
-        borderBottom: "1px solid var(--color-stone-moss)",
+        backgroundColor: "var(--color-bg)",
+        borderBottom: "1px solid var(--color-border)",
         position: "sticky",
         top: 0,
         zIndex: 50,
@@ -22,24 +22,23 @@ export default function Nav() {
     >
       <div
         style={{
-          maxWidth: 900,
+          maxWidth: 760,
           margin: "0 auto",
-          padding: "0 var(--spacing-32)",
+          padding: "0 24px",
           height: 56,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "var(--spacing-16)",
         }}
       >
         <Link
           href="/"
           style={{
-            fontWeight: 700,
-            fontSize: "var(--text-body-sm)",
-            letterSpacing: "-0.04em",
-            color: "var(--color-adaline-ink)",
+            fontWeight: 500,
+            fontSize: "var(--text-nav)",
+            color: "var(--color-text-primary)",
             whiteSpace: "nowrap",
+            letterSpacing: 0,
           }}
         >
           Sam Wong
@@ -49,7 +48,7 @@ export default function Nav() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 4,
+            gap: 28,
           }}
         >
           {NAV_LINKS.map((link) => (

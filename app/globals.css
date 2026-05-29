@@ -1,36 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-canvas-ice: #fbfdf6;
-  --color-adaline-ink: #0a1d08;
-  --color-mist-gray: #c5ccb6;
-  --color-deep-earth: #31200b;
-  --color-valley-green: #203b14;
-  --color-stone-moss: #e0e5d5;
-  --color-amber-seed: #4a3212;
-  --color-forest-dew: #d7e8b5;
-  --color-blackest-night: #000000;
+  /* Colors — Archive White palette */
+  --color-bg: #ffffff;
+  --color-text-primary: #111111;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-border: #e5e5e5;
+  --color-border-faint: #f0f0f0;
+  --color-accent: #2d6a4f;
+  --color-accent-dark: #1e4d38;
 
-  /* Font families — resolved via CSS variables injected by next/font */
-  --font-akkurat: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system,
+  /* Font families */
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-fragmentmono: var(--font-fragment-mono), ui-monospace, SFMono-Regular,
+  --font-mono: var(--font-fragment-mono), ui-monospace, SFMono-Regular,
     Menlo, Monaco, Consolas, monospace;
 
   /* Type scale */
+  --text-name: 60px;
+  --text-h1: 40px;
+  --text-h2: 24px;
+  --text-h3: 18px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-label: 11px;
+  --text-nav: 14px;
   --text-caption: 12px;
-  --leading-caption: 1.43;
-  --text-body-sm: 14px;
-  --leading-body-sm: 1.43;
-  --text-body: 18px;
-  --leading-body: 1.43;
-  --text-body-lg: 47px;
-  --leading-body-lg: 1.3;
-  --text-heading-sm: 53px;
-  --leading-heading-sm: 1.3;
 
   /* Spacing */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+
+  /* Radii */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-buttons: 2px;
+  --radius-images: 0px;
+  --radius-navitems: 2px;
+
+  /* Shadows — none */
+  --shadow-subtle: none;
+
+  /* Legacy compat aliases used elsewhere */
+  --color-canvas-ice: #ffffff;
+  --color-adaline-ink: #111111;
+  --color-mist-gray: #9ca3af;
+  --color-valley-green: #2d6a4f;
+  --color-stone-moss: #e5e5e5;
+  --color-forest-dew: #f0f0f0;
+  --color-amber-seed: #111111;
+  --color-deep-earth: #111111;
+
+  /* Spacing legacy compat */
   --spacing-8: 8px;
   --spacing-16: 16px;
   --spacing-24: 24px;
@@ -41,13 +71,15 @@
   --spacing-128: 128px;
   --spacing-160: 160px;
 
-  /* Radii */
-  --radius-images: 8px;
-  --radius-buttons: 20px;
-  --radius-navitems: 20px;
+  /* Font legacy compat */
+  --font-akkurat: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-fragmentmono: var(--font-fragment-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Shadows */
-  --shadow-subtle: rgba(99, 143, 61, 0.1) 0px 0px 0px 1px;
+  /* Type legacy compat */
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.5;
+  --leading-body: 1.65;
+  --leading-caption: 1.43;
 }
 
 *,
@@ -61,12 +93,12 @@ html {
 }
 
 body {
-  background-color: var(--color-canvas-ice);
-  color: var(--color-adaline-ink);
-  font-family: var(--font-akkurat);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
   font-size: var(--text-body);
-  line-height: var(--leading-body);
-  letter-spacing: -0.04em;
+  line-height: 1.65;
+  letter-spacing: 0;
   font-feature-settings: "calt", "kern";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -83,12 +115,22 @@ video {
   height: auto;
 }
 
+/* ─── Mono label utility ──────────────────────────────── */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
 /* ─── Entrance animations ─────────────────────────────── */
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -96,19 +138,27 @@ video {
   }
 }
 
-/* Hero elements animate on page load with staggered delays */
-.anim-1 { animation: fadeUp 0.55s ease 0.05s both; }
-.anim-2 { animation: fadeUp 0.55s ease 0.15s both; }
-.anim-3 { animation: fadeUp 0.55s ease 0.25s both; }
-.anim-4 { animation: fadeUp 0.55s ease 0.35s both; }
-.anim-5 { animation: fadeUp 0.55s ease 0.45s both; }
+.anim-1 { animation: fadeUp 0.5s ease 0.05s both; }
+.anim-2 { animation: fadeUp 0.5s ease 0.12s both; }
+.anim-3 { animation: fadeUp 0.5s ease 0.20s both; }
+.anim-4 { animation: fadeUp 0.5s ease 0.28s both; }
+.anim-5 { animation: fadeUp 0.5s ease 0.36s both; }
+
+/* ─── Hover utilities (CSS-only — no JS event handlers needed) ─── */
+
+.social-link:hover { color: var(--color-accent) !important; }
+.footer-link:hover { color: var(--color-text-primary) !important; }
+.project-card:hover { border-color: var(--color-text-tertiary) !important; }
+.tag-chip:hover { background-color: var(--color-accent) !important; color: #fff !important; }
+.pub-link:hover { background-color: var(--color-accent) !important; color: #fff !important; }
+.pub-title-link:hover { color: var(--color-accent) !important; }
 
 /* ─── Scroll reveal ───────────────────────────────────── */
 
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
 }
 
 .reveal.in-view {
@@ -116,22 +166,24 @@ video {
   transform: translateY(0);
 }
 
-/* ─── Responsive hero ─────────────────────────────────── */
-
 /* ─── Hero photo ──────────────────────────────────────── */
 
 .hero-photo img {
-  width: clamp(160px, 20vw, 260px);
-  height: clamp(160px, 20vw, 260px);
+  width: 200px;
+  height: 200px;
   object-fit: cover;
-  border-radius: var(--radius-images);
+  border-radius: 0;
   display: block;
-  box-shadow: var(--shadow-subtle);
 }
 
 @media (max-width: 640px) {
   .hero-row {
     flex-direction: column-reverse !important;
-    gap: 32px !important;
+    gap: 28px !important;
+  }
+
+  .hero-photo img {
+    width: 100px !important;
+    height: 100px !important;
   }
 }

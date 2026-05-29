@@ -8,97 +8,33 @@ import Button from "@/components/Button";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const CONTAINER: React.CSSProperties = {
-  maxWidth: 900,
+  maxWidth: 760,
   margin: "0 auto",
-  padding: "0 32px",
+  padding: "0 24px",
 };
 
-const LABEL: React.CSSProperties = {
-  fontFamily: "var(--font-fragmentmono)",
-  fontSize: "var(--text-caption)",
-  letterSpacing: "0.06em",
+const SECTION_LABEL: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: "var(--text-label)",
+  fontWeight: 500,
+  letterSpacing: "0.08em",
   textTransform: "uppercase" as const,
-  color: "var(--color-mist-gray)",
-  marginBottom: 10,
+  color: "var(--color-text-tertiary)",
+  margin: "12px 0 0 0",
 };
 
-const BULLET_LIST: React.CSSProperties = {
-  listStyle: "none",
-  padding: 0,
-  margin: 0,
-  display: "flex",
-  flexDirection: "column",
-  gap: 6,
-};
+const SOCIAL_LINKS = [
+  { label: "Email", href: "mailto:samw627@uw.edu" },
+  { label: "GitHub", href: "https://github.com/samw0627" },
+  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=3ikhPPUAAAAJ&hl=en" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/samwong0627/" },
+];
 
-const BULLET_ITEM: React.CSSProperties = {
-  display: "flex",
-  alignItems: "baseline",
-  gap: 10,
-  fontSize: "var(--text-body)",
-  lineHeight: 1.5,
-  color: "var(--color-adaline-ink)",
-};
-
-const DOT: React.CSSProperties = {
-  width: 5,
-  height: 5,
-  borderRadius: "50%",
-  backgroundColor: "var(--color-valley-green)",
-  flexShrink: 0,
-  marginTop: 8,
-};
-
-const LINK: React.CSSProperties = {
-  color: "var(--color-valley-green)",
-  textDecoration: "underline",
-  textDecorationColor: "var(--color-stone-moss)",
-  textUnderlineOffset: 3,
-};
-
-interface BulletProps {
-  children: React.ReactNode;
-}
-
-function Bullet({ children }: BulletProps) {
+function SectionRule({ label }: { label: string }) {
   return (
-    <li style={BULLET_ITEM}>
-      <span style={DOT} aria-hidden="true" />
-      <span>{children}</span>
-    </li>
-  );
-}
-
-interface SectionHeaderProps {
-  title: string;
-  href: string;
-}
-
-function SectionHeader({ title, href }: SectionHeaderProps) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 32,
-        paddingBottom: 16,
-        borderBottom: "1px solid var(--color-stone-moss)",
-      }}
-    >
-      <h2
-        style={{
-          margin: 0,
-          fontSize: 22,
-          fontWeight: 700,
-          letterSpacing: "-0.04em",
-        }}
-      >
-        {title}
-      </h2>
-      <Button href={href} variant="tertiary">
-        View all
-      </Button>
+    <div style={{ marginBottom: 40 }}>
+      <hr style={{ border: "none", borderTop: "1px solid var(--color-border)", margin: 0 }} />
+      <p style={SECTION_LABEL}>{label}</p>
     </div>
   );
 }
@@ -111,36 +47,25 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div style={{ paddingBottom: "var(--spacing-128)" }}>
+    <div style={{ paddingBottom: 128 }}>
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section
-        style={{
-          ...CONTAINER,
-          paddingTop: 80,
-          paddingBottom: 80,
-          borderBottom: "1px solid var(--color-stone-moss)",
-        }}
-      >
+      <section style={{ ...CONTAINER, paddingTop: 80, paddingBottom: 80 }}>
         <div
           className="hero-row"
-          style={{
-            display: "flex",
-            gap: 64,
-            alignItems: "center",
-          }}
+          style={{ display: "flex", gap: 64, alignItems: "flex-start" }}
         >
           {/* Left: text */}
           <div style={{ flex: 1, minWidth: 0 }}>
-
             <h1
               className="anim-1"
               style={{
-                fontSize: "clamp(36px, 6vw, 53px)",
+                fontSize: "clamp(40px, 8vw, 60px)",
                 fontWeight: 700,
-                lineHeight: 1.1,
+                lineHeight: 1.0,
                 letterSpacing: "-0.04em",
-                margin: "0 0 8px 0",
+                margin: "0 0 12px 0",
+                color: "var(--color-text-primary)",
               }}
             >
               Sam Wong
@@ -149,180 +74,180 @@ export default async function HomePage() {
             <p
               className="anim-2"
               style={{
-                fontFamily: "var(--font-fragmentmono)",
-                fontSize: "var(--text-body-sm)",
-                letterSpacing: "0.02em",
-                color: "var(--color-mist-gray)",
-                margin: "0 0 40px 0",
+                fontSize: "var(--text-body)",
+                fontWeight: 400,
+                color: "var(--color-text-secondary)",
+                margin: "0 0 28px 0",
+                lineHeight: 1.4,
               }}
             >
-              Research Assistant · University of Washington
+              Research Assistant · Human-Computer Interaction · University of Washington
             </p>
 
-            {/* Research bullets */}
-            <div className="anim-3" style={{ marginBottom: 28 }}>
-              <p style={LABEL}>Research</p>
-              <ul style={BULLET_LIST}>
-                <Bullet>
-                  Human-Computer Interaction &amp; Social Computing
-                </Bullet>
-                <Bullet>
-                  <a href="https://social.cs.washington.edu/" style={LINK} target="_blank" rel="noopener noreferrer">
-                    Social Futures Lab
-                  </a>{" "}
-                  at{" "}
-                  <a href="https://www.cs.washington.edu/" style={LINK} target="_blank" rel="noopener noreferrer">
-                    Paul G. Allen School
-                  </a>
-                  , advised by{" "}
-                  <a href="https://homes.cs.washington.edu/~axz/" style={LINK} target="_blank" rel="noopener noreferrer">
-                    Amy Zhang
-                  </a>
-                </Bullet>
-                <Bullet>
-                  Building systems for online social understanding &amp; participation
-                </Bullet>
-              </ul>
-            </div>
-
-            {/* Education bullets */}
-            <div className="anim-4" style={{ marginBottom: 36 }}>
-              <p style={LABEL}>Education</p>
-              <ul style={BULLET_LIST}>
-                <Bullet>
-                  MS ·{" "}
-                  <a href="https://gix.uw.edu/" style={LINK} target="_blank" rel="noopener noreferrer">
-                    Global Innovation Exchange
-                  </a>
-                  , UW
-                </Bullet>
-                <Bullet>
-                  BS · Cognitive Science (minor: CS) ·{" "}
-                  <a href="https://ucsd.edu/" style={LINK} target="_blank" rel="noopener noreferrer">
-                    UC San Diego
-                  </a>
-                </Bullet>
-              </ul>
-            </div>
-
-            {/* Social links */}
-            <div
-              className="anim-5"
+            <p
+              className="anim-3"
               style={{
-                display: "flex",
-                gap: 8,
-                flexWrap: "wrap",
+                fontSize: "var(--text-body)",
+                color: "var(--color-text-primary)",
+                lineHeight: 1.7,
+                margin: "0 0 32px 0",
               }}
             >
-              {[
-                { label: "Email", href: "mailto:samw627@uw.edu" },
-                { label: "GitHub", href: "https://github.com/samw0627" },
-                { label: "Google Scholar", href: "https://scholar.google.com/citations?user=3ikhPPUAAAAJ&hl=en" },
-                { label: "LinkedIn", href: "https://www.linkedin.com/in/samwong0627/" },
-              ].map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  style={{
-                    fontFamily: "var(--font-fragmentmono)",
-                    fontSize: "var(--text-caption)",
-                    letterSpacing: "0.02em",
-                    color: "var(--color-valley-green)",
-                    border: "1px solid var(--color-stone-moss)",
-                    borderRadius: "var(--radius-buttons)",
-                    padding: "5px 14px",
-                  }}
-                >
-                  {label}
-                </a>
+              I study how people form understanding and participate in online social environments.
+              Working with{" "}
+              <a
+                href="https://homes.cs.washington.edu/~axz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: "var(--color-border)",
+                  textUnderlineOffset: 3,
+                }}
+              >
+                Amy Zhang
+              </a>{" "}
+              at the{" "}
+              <a
+                href="https://social.cs.washington.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: "var(--color-border)",
+                  textUnderlineOffset: 3,
+                }}
+              >
+                Social Futures Lab
+              </a>
+              , I build systems that facilitate collective sensemaking in digital communities.
+              Previously at{" "}
+              <a
+                href="https://gix.uw.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: "var(--color-border)",
+                  textUnderlineOffset: 3,
+                }}
+              >
+                GIX
+              </a>{" "}
+              (MS) and{" "}
+              <a
+                href="https://ucsd.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: "var(--color-border)",
+                  textUnderlineOffset: 3,
+                }}
+              >
+                UC San Diego
+              </a>{" "}
+              (BS, Cognitive Science).
+            </p>
+
+            {/* Slash-separated social links */}
+            <div
+              className="anim-4"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 0,
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-caption)",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
+              }}
+            >
+              {SOCIAL_LINKS.map(({ label, href }, i) => (
+                <span key={label} style={{ display: "flex", alignItems: "center" }}>
+                  {i > 0 && (
+                    <span style={{ color: "var(--color-border)", margin: "0 10px" }}>/</span>
+                  )}
+                  <a
+                    href={href}
+                    target={href.startsWith("mailto") ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    style={{
+                      color: "var(--color-text-secondary)",
+                      transition: "color 150ms ease",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {label}
+                  </a>
+                </span>
               ))}
             </div>
           </div>
 
           {/* Right: photo */}
-          <div
-            className="anim-1 hero-photo"
-            style={{ flexShrink: 0 }}
-          >
+          <div className="anim-1 hero-photo" style={{ flexShrink: 0 }}>
             <Image
               src="/images/sam_wong.webp"
               alt="Sam Wong"
-              width={260}
-              height={260}
+              width={200}
+              height={200}
               priority
               unoptimized
+              style={{ display: "block" }}
             />
           </div>
         </div>
       </section>
 
       {/* ── Featured Projects ─────────────────────────────── */}
-      <section
-        style={{
-          ...CONTAINER,
-          paddingTop: 72,
-          paddingBottom: 72,
-          borderBottom: "1px solid var(--color-stone-moss)",
-        }}
-      >
+      <section style={{ ...CONTAINER, paddingTop: 64, paddingBottom: 64 }}>
         <ScrollReveal>
-          <SectionHeader title="Featured Projects" href="/projects/" />
+          <SectionRule label="Selected Projects" />
         </ScrollReveal>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-            gap: 24,
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: 0,
             marginBottom: 32,
+            border: "1px solid var(--color-border)",
           }}
         >
           {projects.map((p, i) => (
-            <ScrollReveal key={p.title} delay={i * 80}>
+            <ScrollReveal key={p.title} delay={i * 60}>
               <ProjectCard project={p} />
             </ScrollReveal>
           ))}
         </div>
 
-        <ScrollReveal delay={projects.length * 80}>
+        <ScrollReveal delay={projects.length * 60}>
           <Button href="/projects/" variant="secondary">
-            Show More Projects
+            All projects →
           </Button>
         </ScrollReveal>
       </section>
 
       {/* ── Featured Publications ─────────────────────────── */}
-      <section
-        style={{
-          ...CONTAINER,
-          paddingTop: 72,
-          paddingBottom: 72,
-        }}
-      >
+      <section style={{ ...CONTAINER, paddingTop: 64, paddingBottom: 64 }}>
         <ScrollReveal>
-          <SectionHeader title="Selected Publications" href="/publications/" />
+          <SectionRule label="Selected Publications" />
         </ScrollReveal>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-            marginBottom: 32,
-          }}
-        >
+        <div style={{ marginBottom: 32 }}>
           {publications.map((p, i) => (
-            <ScrollReveal key={p.slug} delay={i * 60}>
+            <ScrollReveal key={p.slug} delay={i * 50}>
               <PublicationCard pub={p} people={people} compact />
             </ScrollReveal>
           ))}
         </div>
 
-        <ScrollReveal delay={publications.length * 60}>
+        <ScrollReveal delay={publications.length * 50}>
           <Button href="/publications/" variant="secondary">
-            Show All Publications
+            All publications →
           </Button>
         </ScrollReveal>
       </section>

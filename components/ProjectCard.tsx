@@ -5,27 +5,24 @@ interface ProjectCardProps {
   project: Project;
 }
 
-function LinkChip({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}) {
+function TagChip({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      className="tag-chip"
       style={{
-        fontSize: "var(--text-caption)",
-        fontFamily: "var(--font-fragmentmono)",
-        letterSpacing: "0.02em",
-        color: "var(--color-valley-green)",
-        border: "1px solid var(--color-stone-moss)",
-        borderRadius: 999,
-        padding: "2px 10px",
+        fontFamily: "var(--font-mono)",
+        fontSize: "var(--text-label)",
+        fontWeight: 500,
+        letterSpacing: "0.04em",
+        color: "var(--color-accent)",
+        border: "1px solid var(--color-accent)",
+        borderRadius: "var(--radius-sm)",
+        padding: "2px 8px",
         textDecoration: "none",
+        transition: "background-color 150ms ease, color 150ms ease",
       }}
     >
       {label}
@@ -38,14 +35,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <article
+      className="project-card"
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "1px solid var(--color-stone-moss)",
-        borderRadius: "var(--radius-images)",
+        border: "1px solid var(--color-border)",
+        borderRadius: "var(--radius-none)",
         overflow: "hidden",
-        boxShadow: "var(--shadow-subtle)",
-        backgroundColor: "var(--color-canvas-ice)",
+        backgroundColor: "var(--color-bg)",
+        transition: "border-color 150ms ease",
       }}
     >
       {project.image && (
@@ -54,7 +52,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             position: "relative",
             width: "100%",
             paddingTop: "56.25%",
-            backgroundColor: "var(--color-stone-moss)",
+            backgroundColor: "var(--color-border-faint)",
             overflow: "hidden",
           }}
         >
@@ -71,20 +69,20 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
       <div
         style={{
-          padding: "var(--spacing-24)",
+          padding: "24px",
           display: "flex",
           flexDirection: "column",
-          gap: "var(--spacing-8)",
+          gap: 10,
           flex: 1,
         }}
       >
         <h3
           style={{
             margin: 0,
-            fontSize: "var(--text-body)",
-            fontWeight: 700,
-            letterSpacing: "-0.04em",
-            lineHeight: 1.2,
+            fontSize: "var(--text-h3)",
+            fontWeight: 600,
+            lineHeight: 1.25,
+            letterSpacing: 0,
           }}
         >
           {mainLink ? (
@@ -105,9 +103,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           <p
             style={{
               margin: 0,
-              fontSize: "var(--text-body-sm)",
-              color: "var(--color-mist-gray)",
-              lineHeight: 1.5,
+              fontSize: "var(--text-small)",
+              color: "var(--color-text-secondary)",
+              lineHeight: 1.55,
               flex: 1,
             }}
           >
@@ -115,15 +113,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </p>
         )}
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-          {project.demo && <LinkChip href={project.demo} label="Demo" />}
-          {project.url && !project.demo && (
-            <LinkChip href={project.url} label="Website" />
-          )}
-          {project.code && <LinkChip href={project.code} label="Code" />}
-          {project.paper && <LinkChip href={project.paper} label="Paper" />}
-          {project.video && <LinkChip href={project.video} label="Video" />}
-        </div>
+        {(project.demo || project.url || project.code || project.paper || project.video) && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+            {project.demo && <TagChip href={project.demo} label="Demo" />}
+            {project.url && !project.demo && (
+              <TagChip href={project.url} label="Website" />
+            )}
+            {project.code && <TagChip href={project.code} label="Code" />}
+            {project.paper && <TagChip href={project.paper} label="Paper" />}
+            {project.video && <TagChip href={project.video} label="Video" />}
+          </div>
+        )}
       </div>
     </article>
   );
