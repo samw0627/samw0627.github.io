@@ -82,6 +82,29 @@
   --leading-caption: 1.43;
 }
 
+/* ─── Dark mode overrides ─────────────────────────────── */
+
+[data-theme="dark"] {
+  --color-bg: #111111;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #8a8a8a;
+  --color-text-tertiary: #555555;
+  --color-border: #272727;
+  --color-border-faint: #1a1a1a;
+  --color-accent: #68d391;
+  --color-accent-dark: #4ade80;
+
+  /* Legacy compat aliases */
+  --color-canvas-ice: #111111;
+  --color-adaline-ink: #f0f0f0;
+  --color-mist-gray: #555555;
+  --color-valley-green: #68d391;
+  --color-stone-moss: #272727;
+  --color-forest-dew: #1a1a1a;
+  --color-amber-seed: #f0f0f0;
+  --color-deep-earth: #f0f0f0;
+}
+
 *,
 *::before,
 *::after {
@@ -146,6 +169,7 @@ video {
 
 /* ─── Hover utilities (CSS-only — no JS event handlers needed) ─── */
 
+.theme-toggle:hover { color: var(--color-text-primary) !important; border-color: var(--color-text-tertiary) !important; }
 .social-link:hover { color: var(--color-accent) !important; }
 .footer-link:hover { color: var(--color-text-primary) !important; }
 .project-card:hover { border-color: var(--color-text-tertiary) !important; }

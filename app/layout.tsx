@@ -23,6 +23,18 @@ export const metadata: Metadata = {
   description: "Researcher at Paul G. Allen School of Computer Science & Engineering, University of Washington",
 };
 
+// Runs before React hydrates — prevents flash of wrong theme
+const themeScript = `
+(function() {
+  try {
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = stored || (prefersDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = theme;
+  } catch(e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,8 +43,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${dmSans.variable} ${fragmentMono.variable} h-full`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <Nav />
         <main className="flex-1">{children}</main>

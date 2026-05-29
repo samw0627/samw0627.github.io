@@ -1,5 +1,6 @@
 import Link from "next/link";
 import NavLink from "./NavLink";
+import ThemeToggle from "./ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/projects/", label: "Projects" },
@@ -29,6 +30,7 @@ export default function Nav() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: 16,
         }}
       >
         <Link
@@ -44,19 +46,27 @@ export default function Nav() {
           Sam Wong
         </Link>
 
-        <nav
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 28,
-          }}
-        >
-          {NAV_LINKS.map((link) => (
-            <NavLink key={link.href} href={link.href}>
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <nav style={{ display: "flex", alignItems: "center", gap: 28 }}>
+            {NAV_LINKS.map((link) => (
+              <NavLink key={link.href} href={link.href}>
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div
+            style={{
+              width: 1,
+              height: 16,
+              backgroundColor: "var(--color-border)",
+              flexShrink: 0,
+            }}
+            aria-hidden="true"
+          />
+
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
