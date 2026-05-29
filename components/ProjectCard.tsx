@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/types";
 
 interface ProjectCardProps {
   project: Project;
+  slug?: string;
 }
 
 function TagChip({ href, label }: { href: string; label: string }) {
@@ -30,8 +32,8 @@ function TagChip({ href, label }: { href: string; label: string }) {
   );
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
-  const mainLink = project.url ?? project.demo ?? project.code ?? project.paper;
+export default function ProjectCard({ project, slug }: ProjectCardProps) {
+  const externalLink = project.url ?? project.demo ?? project.code ?? project.paper;
 
   return (
     <article
@@ -56,14 +58,27 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             overflow: "hidden",
           }}
         >
-          <Image
-            src={`/images/projects/${project.image}`}
-            alt={project.title}
-            fill
-            unoptimized
-            style={{ objectFit: "cover" }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {slug ? (
+            <Link href={`/projects/${slug}/`} style={{ display: "block", position: "absolute", inset: 0 }}>
+              <Image
+                src={`/images/projects/${project.image}`}
+                alt={project.title}
+                fill
+                unoptimized
+                style={{ objectFit: "cover" }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </Link>
+          ) : (
+            <Image
+              src={`/images/projects/${project.image}`}
+              alt={project.title}
+              fill
+              unoptimized
+              style={{ objectFit: "cover", position: "absolute", inset: 0 }}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          )}
         </div>
       )}
 
@@ -85,9 +100,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             letterSpacing: 0,
           }}
         >
-          {mainLink ? (
+          {slug ? (
+            <Link href={`/projects/${slug}/`} style={{ color: "inherit" }}>
+              {project.title}
+            </Link>
+          ) : externalLink ? (
             <a
-              href={mainLink}
+              href={externalLink}
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "inherit" }}
@@ -113,17 +132,34 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </p>
         )}
 
-        {(project.demo || project.url || project.code || project.paper || project.video) && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-            {project.demo && <TagChip href={project.demo} label="Demo" />}
-            {project.url && !project.demo && (
-              <TagChip href={project.url} label="Website" />
-            )}
-            {project.code && <TagChip href={project.code} label="Code" />}
-            {project.paper && <TagChip href={project.paper} label="Paper" />}
-            {project.video && <TagChip href={project.video} label="Video" />}
-          </div>
-        )}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+          {slug && (
+            <Link
+              href={`/projects/${slug}/`}
+              className="tag-chip"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "var(--text-label)",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
+                color: "var(--color-accent)",
+                border: "1px solid var(--color-accent)",
+                borderRadius: "var(--radius-sm)",
+                padding: "2px 8px",
+                textDecoration: "none",
+              }}
+            >
+              Case Study →
+            </Link>
+          )}
+          {project.demo && <TagChip href={project.demo} label="Demo" />}
+          {project.url && !project.demo && !slug && (
+            <TagChip href={project.url} label="Website" />
+          )}
+          {project.code && <TagChip href={project.code} label="Code" />}
+          {project.paper && <TagChip href={project.paper} label="Paper" />}
+          {project.video && <TagChip href={project.video} label="Video" />}
+        </div>
       </div>
     </article>
   );
