@@ -1,0 +1,151 @@
+---
+publication: 2023-vizpi
+name: VizPI
+tagline: Running peer instruction on live coding exercises, with a real-time view of every discussion group in a large lecture.
+hero: /images/papers/vizpi/teaser.webp
+hero_caption: "The instructor view (green) and student view (blue). Instructors see class-wide keywords, common code issues and unit-test pass rates, plus every group's progress; students code and chat with their assigned group."
+tldr: "Peer instruction works well in programming classes, but in a lecture with hundreds of students, instructors can't tell which groups are engaged, what they're discussing, or whether it's helping. VizPI is a web tool for running peer instruction on in-class coding exercises. It shows each group's unit-test pass rate and conversation relevance in real time, summarizes discussion keywords and common code issues, and links every chat message to the code the student had at that moment."
+demo: https://vizpi.org/
+video: https://www.youtube.com/watch?v=wkGMtVkP6oQ
+contributions:
+  - title: What instructors need to run peer instruction at scale
+    body: "Needfinding interviews with three instructors of introductory programming courses pointed to three needs: seeing the main challenges groups discuss, showing exemplary student work to the whole class, and pairing the tool with a deliberate teaching strategy."
+  - title: VizPI, a real-time peer-instruction tool
+    body: "An instructor and student interface that covers the whole peer-instruction cycle: posting a coding task with unit tests, solo coding, grouping students, and monitored group discussion."
+  - title: Discussion linked to code
+    body: "Class- and group-level summaries of discussion keywords and code issues, per-group rings for pass rate and conversation relevance, and a snapshot of each student's code at the moment they send a message."
+bibtex: |
+  @inproceedings{tang2023vizpi,
+    author    = {Tang, Xiaohang and Chen, Xi and Wong, Sam and Chen, Yan},
+    title     = {VizPI: A Real-Time Visualization Tool for Enhancing Peer Instruction in Large-Scale Programming Lectures},
+    booktitle = {Adjunct Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology},
+    series    = {UIST '23 Adjunct},
+    year      = {2023},
+    location  = {San Francisco, CA, USA},
+    publisher = {Association for Computing Machinery},
+    doi       = {10.1145/3586182.3616632}
+  }
+---
+
+## The problem
+
+<Term def="An instructional strategy developed by Eric Mazur: students answer a question on their own, discuss it with peers, then answer again.">Peer Instruction</Term> was first used in physics lectures with multiple-choice questions. Students vote individually, discuss with their neighbors, then vote again. In computing courses, students overwhelmingly say it helps them learn, and instructors get a clearer picture of where students struggle.
+
+Programming instructors have started running peer instruction on small <Term def="Short programming problems that students solve during a lecture or lab, rather than as homework.">in-class coding exercises</Term> instead of multiple-choice questions. Online tools let students share code and solve problems with peers beyond the person sitting next to them.
+
+But once the discussion moves online, the instructor loses sight of it. In an introductory class of hundreds of students, it's hard to tell:
+
+- whether groups are actually engaged in discussion,
+- what they're talking about, and
+- whether the discussion is relevant to the exercise.
+
+So our question was how to help instructors monitor peer discussion on coding exercises in large programming lectures.
+
+## Needfinding
+
+We held informal interviews with **3 instructors** who teach introductory programming. Three needs shaped the design:
+
+1. **The big picture.** Instructors wanted to understand and talk about how groups were doing overall, especially the main conceptual, coding and logic challenges students were discussing.
+2. **Student work on the big screen.** They wanted to project exemplary student responses for a class-wide discussion, so students share the examples, not just the instructor.
+3. **Pedagogy, not just a tool.** They saw the most potential when the tool is paired with a well-designed teaching strategy for the classroom.
+
+## How VizPI works
+
+VizPI has an instructor view and a student view. Each is split into a top bar, a group list, a chat and a code editor.
+
+<Tabs>
+<Tab label="Instructor view">
+
+<Figure src="/images/papers/vizpi/instructor-view.webp" n="1a" caption="Instructor view: (A) switch between Task, Class Info and Group Info; (B) discussion keywords; (C) common code issues; (D) class pass rate on the instructor's unit tests; (E) group list; (F) a group's chat; (G) that student's code; (H–J) controls for chat, grouping and replay." />
+
+</Tab>
+<Tab label="Student view">
+
+<Figure src="/images/papers/vizpi/student-view.webp" n="1b" caption="Student view: (A) the task description, (F) the group chat and (G) a code editor with Run and Save." />
+
+</Tab>
+</Tabs>
+
+A session follows the steps of peer instruction.
+
+### 1. Post a task and let students work alone
+
+The instructor enters a task description and the <Term def="Small automated checks that run a student's code against expected inputs and outputs.">unit tests</Term> to grade solutions against. Students see the task right away and start coding. The instructor can switch chat off so everyone works on their own first. As students run their code, the instructor sees the pass rate for the whole class and for each unit test.
+
+### 2. Share results and open discussion
+
+After the first attempt, the instructor can share the initial results and give some early feedback. Then they group students into pairs or trios with a balance of expertise and switch chat on. For the rest of the exercise, groups discuss and work on the code together, and the instructor can watch at two levels.
+
+<Tabs>
+<Tab label="Class and group">
+
+<Figure src="/images/papers/vizpi/top-bar.webp" n="1B–D" caption="Keywords from all group conversations, code-issue cards with the share of students affected, and the class pass rate per unit test." />
+
+- **Keywords** summarize the main themes across every group's messages. Clicking a keyword filters to the groups that mentioned it.
+- **Code issues** show common errors in student submissions as cards, each with the percentage of students making the mistake and a summary of the error.
+- **Pass rate** shows how the class is doing on each unit test.
+
+The same panels can be switched to a single group's data.
+
+</Tab>
+<Tab label="Group list">
+
+<Figure src="/images/papers/vizpi/group-list.webp" n="1E" caption="Each group gets two rings: pass rate (outer, light green) and conversation relevance (inner, dark blue)." />
+
+Each group gets two rings:
+
+- The **outer light-green ring** is the group's pass rate across all unit tests.
+- The **inner dark-blue ring** is <Term def="How close a group's messages are to the solution of the exercise. Higher means the discussion is more on track.">conversation relevance</Term>.
+
+Together they show how close each group is to the correct answer, and a search bar filters the list.
+
+</Tab>
+<Tab label="Individual">
+
+<Figure src="/images/papers/vizpi/chat-code.webp" n="1F–G" caption="Selecting a chat message shows that student's code at the moment they sent it." />
+
+Whenever a student sends a message, VizPI saves the code they had at that moment. Selecting a message shows that snapshot, so the instructor can trace how a student worked through the problem alongside what they were saying.
+
+</Tab>
+</Tabs>
+
+<Deeper title="Instructor controls">
+
+The bottom of the instructor view has the controls that drive a session: switch the chat on or off (H), form groups (I), and replay a group's discussion (J).
+
+</Deeper>
+
+## VizPI today
+
+The poster describes an early prototype. VizPI has since grown into a platform at [vizpi.org](https://vizpi.org/) (short for "visualizing peer interactions") for in-class coding exercises built around peer interaction.
+
+<Stats>
+  <Stat value="543" label="Class sessions run" note="as reported on vizpi.org" />
+  <Stat value="10,759" label="Students in VizPI sessions" />
+  <Stat value="3,468" label="Groups formed in live classes" />
+</Stats>
+
+The platform now has four exercise types:
+
+- **Auto Grouping** forms groups for peer instruction and group discussion.
+- **Audio Discussion** transcribes live discussions and gives AI-generated insights into how each conversation is going.
+- **Helper/Helpee** lets students who have finished the task help struggling peers through chat.
+- **Vizmental** gives each student a personal AI assistant that guides and encourages them while they code.
+
+<Video src="https://www.youtube.com/embed/wkGMtVkP6oQ" title="VizPI platform introduction" />
+
+## What came next
+
+The poster listed three directions for future work:
+
+1. **Better grouping.** Form groups using students' pass rates and personality traits.
+2. **Better language models.** Pull out key discussion points more accurately, guided by instructor feedback.
+3. **Feedback at different levels.** Let instructors give feedback to the class, a group or an individual during peer instruction.
+
+Later projects picked these up. [VizGroup](/papers/vizgroup/) (UIST 2024) uses LLMs to suggest which collaboration patterns to watch and alerts instructors when they appear. A study in a large CS1 course compared random and expertise-balanced grouping (SIGCSE 2025).
+
+## Takeaways
+
+- **Peer instruction on code needs its own tools.** Once discussion moves online and the class grows to hundreds, instructors need a view of every group, not just the room.
+- **Show both progress and discussion.** Pairing each group's pass rate with conversation relevance shows instructors which groups are close to the answer.
+- **Link chat to code.** A snapshot of the code at each message tells the instructor what the student was looking at when they said it.
