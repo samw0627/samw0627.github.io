@@ -1,6 +1,5 @@
+# Neither build script is needed: images are unoptimized (no sharp) and
+# unrs-resolver ships prebuilt binaries
 allowBuilds:
-  sharp: set this to true or false
-  unrs-resolver: set this to true or false
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
+  sharp: false
+  unrs-resolver: false
