@@ -4,49 +4,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
+Package manager is **pnpm** (CI uses pnpm 9, Node 20).
+
 ```bash
-# Local dev server with live reload
-bundle exec jekyll serve --livereload
-
-# Build only
-bundle exec jekyll build
-
-# Create a new blog post
-bundle exec jekyll post "My New Post"
-
-# Docker alternative (no Ruby install required)
-docker run \
-  --volume="$PWD:/srv/jekyll" \
-  -p 4000:4000 -p 35729:35729 \
-  -it jekyll/jekyll \
-  jekyll serve --livereload
+pnpm dev      # Next.js dev server (http://localhost:3000)
+pnpm build    # Static export to ./out (this is what CI deploys)
+pnpm lint     # ESLint (eslint-config-next)
 ```
+
+There is no test suite. `pnpm build` is the real check: it runs type-checking and every `generateStaticParams`, so a broken content file or missing data file fails the build.
 
 ## Architecture
 
-This is a Jekyll static site deployed to GitHub Pages. Pushes to `master` trigger an automatic build and deploy via GitHub Actions (`.github/workflows/build.yml`).
+This is a personal academic site built with **Next.js 16 (App Router) + React 19 + Tailwind CSS v4**. It is exported as a fully static site (`output: "export"`, `trailingSlash: true`, unoptimized images in `next.config.ts`) and deployed to GitHub Pages by `.github/workflows/build.yml` on every push to `master`, which uploads `./out`.
 
-**Content structure:**
-- `_posts/` — Blog posts in Markdown with YAML front matter; filenames must follow `YYYY-MM-DD-title.md`
-- `_publications/` — Publication entries as a Jekyll collection (no output pages generated); referenced by `publications.md`
-- `_data/` — YAML data files used to drive dynamic content (e.g., projects list)
-- `_layouts/` — Page templates: `default`, `post`, `publication`, `cv`
-- `_includes/` — Reusable HTML partials (header, footer, etc.)
-- `_sass/` — SCSS source; compiled and compressed in production
-- `_site/` — Generated build output; never edit directly
+**Legacy Jekyll layout:** the site was migrated from Jekyll. `_config.yml`, `Gemfile`, `_layouts/`, `_includes/`, `_sass/`, `_site/`, the root `*.md`/`cv.html` pages, and the README's `jekyll` commands are leftovers and are **not used by the build**. However, the Next.js app still reads content from the Jekyll-style folders, so those folders are the source of truth for content.
 
-**Key pages:**
-- `index.md` — Home page
-- `cv.html` — CV page driven by structured data
-- `publications.md` — Renders entries from `_publications/`
-- `projects.md` — Renders entries from `_data/`
+**Data flow:** Server components in `app/` call loader functions in `lib/`. The loaders read files from disk with `fs` at build time (paths relative to `process.cwd()`). Nothing is fetched at runtime.
 
-**Plugins (GitHub Pages compatible):** `jekyll-sitemap`, `jekyll-feed`, `jekyll-seo-tag`, `jekyll-mentions`
+| Loader | Source | Notes |
+|---|---|---|
+| `lib/posts.ts` | `_posts/YYYY-MM-DD-slug.(md\|markdown)` | Date and slug come from the filename; routed at `/blog/[year]/[month]/[slug]` |
+| `lib/publications.ts` | `_publications/*.html` | Front matter is parsed with gray-matter; the body is rendered as the description. Front-matter keys are snake_case (`venue_location`, `venue_url`), mapped to camelCase in `Publication`. `highlight: true` puts it on the home page |
+| `lib/projects.ts` | `_data/projects.yml` | Project list; a numeric `highlight` sets the order on the home page |
+| `lib/project-content.ts` | `content/projects/<slug>.md` | Long-form case-study pages at `/projects/[slug]`. Front matter defines `sections` (id/label/roman numeral, which drive `ProjectSideNav`) and optional `findings` |
+| `lib/data.ts` | `_data/*.yml` | CV data (people, positions, education, awards, news, service, teaching, etc.) and talks |
+
+Shared types are in `lib/types.ts`. Markdown is rendered with remark + remark-gfm + remark-html with `sanitize: false`, so raw HTML in content is passed through. The `@/*` import alias maps to the repo root.
+
+**Static assets:** only `public/` is served (`public/images`, `public/papers`). The top-level `images/` and `papers/` folders are Jekyll leftovers, so new assets go in `public/`.
+
+**Styling and theming:** Tailwind v4 is configured CSS-first in `app/globals.css` (`@theme` tokens, no `tailwind.config`). Dark mode uses a `[data-theme="dark"]` attribute on `<html>`. An inline script in `app/layout.tsx` sets it before hydration from `localStorage.theme` or `prefers-color-scheme`, and `components/ThemeToggle.tsx` flips it. Use the color tokens (`--color-bg`, `--color-text-primary`, `--color-accent`, …) instead of hard-coded colors so both themes keep working. The Adaline-named tokens (`--color-canvas-ice`, `--color-valley-green`, …) are aliases that are redefined for dark mode as well. `design.md` is the reference style guide that the visual design was based on. Fonts are DM Sans and Fragment Mono via `next/font`.
 
 ## Adding Content
 
-**New publication:** add a Markdown file to `_publications/` with appropriate front matter (title, authors, venue, year, url, etc.).
-
-**New blog post:** use `bundle exec jekyll post "Title"` or create `_posts/YYYY-MM-DD-title.md` manually.
-
-**New project:** add an entry to the relevant YAML file in `_data/`.
+- **Blog post:** `_posts/YYYY-MM-DD-title.md` with a `title` in the front matter.
+- **Publication:** `_publications/<year>-<slug>.html` with YAML front matter (`title`, `authors`, `year`, `venue`, `type`, links such as `pdf`/`doi`/`arxiv`, and optional `highlight: true`).
+- **Project card:** add an entry to `_data/projects.yml`. For a full case-study page, also add `content/projects/<slug>.md` (see `vizgroup.md` for the expected front matter).
+- **CV data:** edit the matching YAML file in `_data/`.
