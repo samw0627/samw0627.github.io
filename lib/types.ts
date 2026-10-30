@@ -48,27 +48,6 @@ export interface Person {
   me?: boolean;
 }
 
-export interface Post {
-  slug: string;
-  date: string;
-  year: string;
-  month: string;
-  title: string;
-  description?: string;
-  permalink?: string;
-  content: string;
-}
-
-export interface Talk {
-  title: string;
-  location: string;
-  date: string;
-  city?: string;
-  url?: string;
-  slides?: string;
-  recording?: string;
-}
-
 export interface Position {
   title: string;
   years: string;

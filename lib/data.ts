@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { load } from "js-yaml";
-import type { Person, Talk, Position, Education, Award, NewsItem } from "./types";
+import type { Person, Position, Education, Award, NewsItem } from "./types";
 
 // Missing or fully commented-out data files are treated as empty lists
 function loadYaml<T>(filename: string): T {
@@ -11,7 +11,6 @@ function loadYaml<T>(filename: string): T {
 }
 
 export const getPeople = () => loadYaml<Record<string, Person>>("people.yml");
-export const getTalks = () => loadYaml<Talk[]>("talks.yml");
 export const getEducation = () => loadYaml<Education[]>("education.yml");
 export const getPositions = () => loadYaml<Position[]>("positions.yml");
 export const getAwards = () => loadYaml<Award[]>("awards.yml");
