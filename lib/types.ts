@@ -23,6 +23,8 @@ export interface Publication {
   osf?: string;
   description?: string;
   summary?: string;
+  /** Site path of the interactive paper page, if content/papers/ has one */
+  paperPage?: string;
 }
 
 export interface Project {
@@ -37,6 +39,8 @@ export interface Project {
   image?: string;
   description?: string;
   highlight?: number;
+  /** Internal page for this project, e.g. a paper page under /papers/ */
+  page?: string;
 }
 
 export interface Person {
