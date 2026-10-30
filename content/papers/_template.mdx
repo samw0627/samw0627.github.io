@@ -1,0 +1,67 @@
+---
+# Copy to content/papers/<slug>.mdx; the page is served at /papers/<slug>/.
+# Files starting with "_" are ignored by the build.
+publication: 2024-my-paper   # filename (without .html) of the entry in _publications/
+name: MyPaper                # short display name; defaults to the full paper title
+tagline: One sentence on what this paper makes possible.
+hero: /images/papers/<slug>/teaser.webp
+hero_caption: Caption for the hero figure (shown as Figure 1).
+tldr: Two or three plain-language sentences. Shown in a box at the top of the page.
+# code: https://github.com/...
+# demo: https://...
+# video: https://...          # overrides the publication's video link
+contributions:
+  - title: First contribution
+    body: One or two sentences.
+bibtex: |
+  @inproceedings{key,
+    title = {...},
+  }
+---
+
+## The problem
+
+Every `## ` heading becomes a numbered section in the side nav.
+
+Wrap jargon in a <Term def="Shown on hover or tap.">term</Term> to give readers a definition.
+
+<Figure src="/images/papers/<slug>/figure.webp" n="2" caption="Click any figure to zoom; arrow keys step through the gallery." />
+
+<Figure src="/images/papers/<slug>/wide.webp" n="3" size="wide" caption="size='wide' extends past the text column on large screens." />
+
+<Deeper title="Technical detail most readers can skip">
+
+Collapsed by default. Leave blank lines around Markdown inside components.
+
+</Deeper>
+
+## Results
+
+<Stats>
+  <Stat value="2.3×" label="Headline number" note="vs. baseline · p < 0.01" />
+  <Stat value="0.98" label="Another metric" />
+</Stats>
+
+<Tabs>
+<Tab label="Task A">
+
+<Bars title="Recall" max="1" note="max='1' fixes the scale for proportions.">
+  <Bar label="Baseline" value="0.73" />
+  <Bar label="Ours" value="0.96" display="0.96**" highlight />
+</Bars>
+
+</Tab>
+<Tab label="Task B">
+
+Any Markdown or components can go in a tab.
+
+</Tab>
+</Tabs>
+
+<Quote who="P3">
+
+A participant quote.
+
+</Quote>
+
+<Video src="https://www.youtube.com/embed/VIDEO_ID" title="Demo video" />
