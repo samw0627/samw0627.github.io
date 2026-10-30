@@ -57,6 +57,21 @@ export interface Position {
   short_desc?: string;
   skills?: string[];
   mentors?: string[];
+  /** Label for `mentors`, defaults to "Advisor" */
+  mentor_label?: string;
+}
+
+export interface Teaching {
+  title: string;
+  role: string;
+  location?: string;
+  year: string;
+  description?: string[];
+}
+
+export interface Skill {
+  category: string;
+  items: string[];
 }
 
 export interface Education {
@@ -65,16 +80,4 @@ export interface Education {
   degree: string;
   location?: string;
   description?: string[];
-}
-
-export interface Award {
-  name: string;
-  years: string | number;
-  sponsor?: string;
-  description?: string;
-}
-
-export interface NewsItem {
-  message: string;
-  date: string;
 }

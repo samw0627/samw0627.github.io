@@ -1,10 +1,11 @@
 import {
+  getPeople,
   getPositions,
   getEducation,
-  getAwards,
   getTeaching,
-  getMentoring,
+  getSkills,
 } from "@/lib/data";
+import type { Publication } from "@/lib/types";
 import { getAllPublications } from "@/lib/publications";
 
 export const metadata = {
@@ -48,7 +49,9 @@ function Row({
     <div
       style={{
         display: "flex",
-        gap: "var(--spacing-32)",
+        flexWrap: "wrap",
+        columnGap: "var(--spacing-32)",
+        rowGap: 4,
         marginBottom: "var(--spacing-16)",
       }}
     >
@@ -58,35 +61,56 @@ function Row({
           fontFamily: "var(--font-fragmentmono)",
           letterSpacing: "0.02em",
           color: "var(--color-mist-gray)",
-          minWidth: 100,
-          whiteSpace: "nowrap",
+          // Fixed width keeps the right column aligned; on narrow screens the
+          // content wraps below the label instead
+          flex: "0 0 168px",
         }}
       >
         {years}
       </span>
-      <div style={{ flex: 1, fontSize: "var(--text-body-sm)" }}>{children}</div>
+      <div style={{ flex: "1 1 320px", minWidth: 0, fontSize: "var(--text-body-sm)" }}>{children}</div>
     </div>
   );
 }
 
-export default async function CVPage() {
-  const [positions, education, awards, teaching, mentoring, pubs] =
-    await Promise.all([
-      getPositions(),
-      getEducation(),
-      getAwards(),
-      getTeaching(),
-      getMentoring(),
-      getAllPublications(),
-    ]);
+const MUTED = { color: "var(--color-mist-gray)" };
+const LINK = { color: "var(--color-valley-green)" };
 
-  const pubsByType = new Map<string, typeof pubs>();
-  pubs.forEach((p) => {
-    p.type.forEach((t) => {
-      if (!pubsByType.has(t)) pubsByType.set(t, []);
-      pubsByType.get(t)!.push(p);
-    });
-  });
+function Bullets({ items }: { items?: string[] }) {
+  if (!items?.length) return null;
+  return (
+    <ul style={{ margin: "6px 0 0", paddingLeft: 18, ...MUTED }}>
+      {items.map((d) => (
+        <li key={d} style={{ marginBottom: 4 }}>
+          {d}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// Matches the CV's numbering: [C.n] for full papers and preprints, [P.n] for posters
+const PUB_GROUPS = [
+  { title: "Full Papers / Preprints", prefix: "C", types: ["Conference", "Journal", "Preprint"] },
+  { title: "Posters", prefix: "P", types: ["Poster"] },
+];
+
+function groupPubs(pubs: Publication[], types: string[]) {
+  const isPreprint = (p: Publication) => p.type.includes("Preprint");
+  return pubs
+    .filter((p) => p.type.some((t) => types.includes(t)))
+    .sort((a, b) => Number(isPreprint(a)) - Number(isPreprint(b)) || a.year - b.year);
+}
+
+export default async function CVPage() {
+  const [positions, education, teaching, skills, people, pubs] = await Promise.all([
+    getPositions(),
+    getEducation(),
+    getTeaching(),
+    getSkills(),
+    getPeople(),
+    getAllPublications(),
+  ]);
 
   return (
     <div style={CONTAINER}>
@@ -102,116 +126,107 @@ export default async function CVPage() {
         >
           Sam Wong
         </h1>
-        <p style={{ margin: 0, color: "var(--color-mist-gray)", fontSize: "var(--text-body-sm)" }}>
-          Paul G. Allen School of Computer Science &amp; Engineering ·{" "}
-          University of Washington ·{" "}
-          <a href="mailto:samw627@uw.edu" style={{ color: "var(--color-valley-green)" }}>
+        <p style={{ margin: 0, fontSize: "var(--text-body-sm)", ...MUTED }}>
+          Master&rsquo;s Student · University of Washington ·{" "}
+          <a href="mailto:samw627@uw.edu" style={LINK}>
             samw627@uw.edu
+          </a>{" "}
+          ·{" "}
+          <a href="https://chwong.com" style={LINK}>
+            chwong.com
           </a>
         </p>
       </div>
 
-      <Section title="Positions">
-        {positions.map((p, i) => (
-          <Row key={i} years={p.years}>
-            <strong>{p.title}</strong>, {p.company}
-            {p.location && <span style={{ color: "var(--color-mist-gray)" }}> · {p.location}</span>}
-            {p.short_desc && (
-              <p style={{ margin: "4px 0 0", color: "var(--color-mist-gray)" }}>
-                {p.short_desc}
-              </p>
-            )}
-          </Row>
-        ))}
+      <Section title="Research Interests">
+        <p style={{ margin: 0, fontSize: "var(--text-body-sm)" }}>
+          Human-Computer Interaction, Human-AI Interaction, Social Computing
+        </p>
       </Section>
 
       <Section title="Education">
         {education.map((e, i) => (
           <Row key={i} years={e.years}>
-            <strong>{e.degree}</strong>, {e.university}
-            {e.location && <span style={{ color: "var(--color-mist-gray)" }}> · {e.location}</span>}
+            <strong>{e.university}</strong>
+            {e.location && <span style={MUTED}> · {e.location}</span>}
+            <div>{e.degree}</div>
+            <Bullets items={e.description} />
           </Row>
         ))}
       </Section>
 
-      <Section title="Awards">
-        {awards.map((a, i) => (
-          <Row key={i} years={a.years}>
-            <strong>{a.name}</strong>
-            {a.sponsor && <span style={{ color: "var(--color-mist-gray)" }}> · {a.sponsor}</span>}
-            {a.description && (
-              <p style={{ margin: "4px 0 0", color: "var(--color-mist-gray)" }}>
-                {a.description}
-              </p>
-            )}
+      <Section title="Research Experience">
+        {positions.map((p, i) => (
+          <Row key={i} years={p.years}>
+            <strong>{p.company}</strong>
+            <div>
+              {p.title}
+              {p.mentors?.length ? (
+                <span style={MUTED}>
+                  {" "}
+                  · {p.mentor_label ?? (p.mentors.length > 1 ? "Advisors" : "Advisor")}:{" "}
+                  {p.mentors.join(", ")}
+                </span>
+              ) : null}
+            </div>
+            <Bullets items={p.description} />
           </Row>
         ))}
       </Section>
 
-      <Section title="Publications">
-        {["Conference", "Journal", "Workshop", "Demo", "Thesis"].map((type) => {
-          const typePubs = pubsByType.get(type);
-          if (!typePubs?.length) return null;
-          return (
-            <div key={type} style={{ marginBottom: "var(--spacing-24)" }}>
-              <h3
-                style={{
-                  fontSize: "var(--text-body-sm)",
-                  fontFamily: "var(--font-fragmentmono)",
-                  letterSpacing: "0.02em",
-                  color: "var(--color-mist-gray)",
-                  fontWeight: 400,
-                  margin: "0 0 var(--spacing-8) 0",
-                }}
-              >
-                {type}
-              </h3>
-              {typePubs.map((p) => (
-                <div
-                  key={p.slug}
-                  style={{ marginBottom: "var(--spacing-8)", fontSize: "var(--text-body-sm)" }}
-                >
-                  {p.authors.join(", ")}. &ldquo;{p.title}&rdquo;.{" "}
-                  <em>{p.venue}</em>, {p.year}.{" "}
-                  {p.awards?.map((a) => (
-                    <span
-                      key={a}
-                      style={{ color: "var(--color-valley-green)", fontWeight: 700 }}
-                    >
-                      {a}.{" "}
+      {PUB_GROUPS.map(({ title, prefix, types }) => {
+        const group = groupPubs(pubs, types);
+        if (!group.length) return null;
+        return (
+          <Section key={title} title={title}>
+            {group.map((p, i) => (
+              <Row key={p.slug} years={`[${prefix}.${i + 1}] ${p.venue ?? ""} ${p.year}`}>
+                <strong>{p.title}</strong>
+                <div style={MUTED}>
+                  {p.authors.map((a, j) => (
+                    <span key={a}>
+                      {people[a]?.me ? (
+                        <strong style={{ color: "var(--color-text-primary)" }}>{a}</strong>
+                      ) : (
+                        a
+                      )}
+                      {j < p.authors.length - 1 ? ", " : ""}
                     </span>
                   ))}
+                  {(p.pdf ?? p.link) && (
+                    <>
+                      {" "}
+                      <a href={p.pdf ?? p.link} style={LINK}>
+                        [{p.type.includes("Preprint") ? "preprint" : "paper"}]
+                      </a>
+                    </>
+                  )}
                 </div>
-              ))}
-            </div>
-          );
-        })}
-      </Section>
+              </Row>
+            ))}
+          </Section>
+        );
+      })}
 
-      <Section title="Teaching">
-        {(teaching as Record<string, string>[]).map((t, i) => (
-          <Row key={i} years={t.year ?? ""}>
-            <strong>{t.title ?? ""}</strong>
-            {t.location && (
-              <span style={{ color: "var(--color-mist-gray)" }}> · {t.location}</span>
-            )}
-            {t.role && (
-              <span style={{ color: "var(--color-mist-gray)" }}> · {t.role}</span>
-            )}
+      <Section title="Teaching Experience">
+        {teaching.map((t, i) => (
+          <Row key={i} years={t.year}>
+            <strong>{t.title}</strong>
+            <div>
+              {t.role}
+              {t.location && <span style={MUTED}> · {t.location}</span>}
+            </div>
+            <Bullets items={t.description} />
           </Row>
         ))}
       </Section>
 
-      <Section title="Mentoring">
-        <div style={{ color: "var(--color-mist-gray)", fontSize: "var(--text-body-sm)" }}>
-          {(mentoring as Record<string, string>[]).slice(0, 10).map((m, i) => (
-            <span key={i}>
-              {m.name ?? m.names ?? ""}
-              {i < Math.min(mentoring.length, 10) - 1 ? ", " : ""}
-            </span>
-          ))}
-          {mentoring.length > 10 && ` and ${mentoring.length - 10} more.`}
-        </div>
+      <Section title="Languages and Tools">
+        {skills.map((s) => (
+          <Row key={s.category} years={s.category}>
+            {s.items.join(", ")}
+          </Row>
+        ))}
       </Section>
     </div>
   );

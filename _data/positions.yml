@@ -1,6 +1,39 @@
-#- title: Assistant Professor
-#  years: 2020-present
-#  company: Carnegie Mellon University
-#  location: Pittsburgh, PA
-#  description: In the Fall of 2020, I started on the faculty at the Human-Computer-Interaction Institute.
-#  short_desc: "Human Computer Interaction Institute, [Data Interaction Group](https://dig.cmu.edu)"
+# Research experience, newest first. `mentors` are the advisors.
+- title: Research Assistant
+  company: Social Futures Lab, University of Washington
+  years: 10/2024 – present
+  mentors: [Amy Zhang]
+  description:
+    - Leading a project on facilitating political deliberation for individuals through reflection.
+    - Coordinating with 3 undergraduates on the formative study and thematic analysis.
+- title: Research Assistant
+  company: Ubicomp Lab, University of Washington
+  years: 05/2024 – 04/2025
+  mentors: [Jerry Cao, Shwetak Patel, Jennifer Mankoff]
+  description:
+    - Designing an accessible eyedropper for people with low vision and limited motor dexterity.
+    - Conducted a formative study and thematic analysis with 9 participants on the challenges of using eye drops; developed the front-end application for tracking eye-drop usage.
+- title: Research Assistant
+  company: PRIME Lab, Virginia Tech
+  years: 06/2023 – 04/2025
+  mentors: [Yan Chen]
+  description:
+    - Designed and developed VizPI, a real-time classroom tool that facilitates peer instruction at scale [P.1, C.2].
+    - Designed and implemented a visualization system that uses LLMs to help instructors understand class discussion [C.1].
+    - Designed an LLM-powered feedback system that lets instructors give feedback to students at scale [P.2, C.3].
+    - Analyzed quantitative user-study data with pandas, including NASA-TLX workload scores and precision/recall metrics, to compare baseline and treatment conditions in LLM-powered feedback systems [C.3].
+- title: Research Assistant
+  company: Directed Research Group, University of Washington
+  years: 01/2024 – 03/2024
+  mentors: [Sourojit Ghosh, Cecilia Aragon]
+  description:
+    - Conducted a literature review on how researchers and designers of recommender systems measure success.
+- title: UX Researcher
+  company: Diabetes Design Initiative, The Design Lab, UC San Diego
+  years: 06/2022 – 09/2022
+  mentors: [Heidi Rataj]
+  mentor_label: Lead
+  description:
+    - Interviewed people with diabetes (8) and health-care professionals (2) about the challenges of diabetes onboarding.
+    - Analyzed interview data with affinity diagrams and ideated solutions.
+    - Ran A/B tests and lab usability tests with target users.
