@@ -34,6 +34,11 @@ function TagChip({ href, label }: { href: string; label: string }) {
 
 export default function ProjectCard({ project, slug }: ProjectCardProps) {
   const externalLink = project.url ?? project.demo ?? project.code ?? project.paper;
+  // Case studies live at /projects/<slug>/; paper pages set `page` in projects.yml
+  const pageHref = slug ? `/projects/${slug}/` : project.page;
+  const imageSrc = project.image?.startsWith("/")
+    ? project.image
+    : `/images/projects/${project.image}`;
 
   return (
     <article
@@ -58,10 +63,10 @@ export default function ProjectCard({ project, slug }: ProjectCardProps) {
             overflow: "hidden",
           }}
         >
-          {slug ? (
-            <Link href={`/projects/${slug}/`} style={{ display: "block", position: "absolute", inset: 0 }}>
+          {pageHref ? (
+            <Link href={pageHref} style={{ display: "block", position: "absolute", inset: 0 }}>
               <Image
-                src={`/images/projects/${project.image}`}
+                src={imageSrc}
                 alt={project.title}
                 fill
                 unoptimized
@@ -71,7 +76,7 @@ export default function ProjectCard({ project, slug }: ProjectCardProps) {
             </Link>
           ) : (
             <Image
-              src={`/images/projects/${project.image}`}
+              src={imageSrc}
               alt={project.title}
               fill
               unoptimized
@@ -100,8 +105,8 @@ export default function ProjectCard({ project, slug }: ProjectCardProps) {
             letterSpacing: 0,
           }}
         >
-          {slug ? (
-            <Link href={`/projects/${slug}/`} style={{ color: "inherit" }}>
+          {pageHref ? (
+            <Link href={pageHref} style={{ color: "inherit" }}>
               {project.title}
             </Link>
           ) : externalLink ? (
@@ -133,9 +138,9 @@ export default function ProjectCard({ project, slug }: ProjectCardProps) {
         )}
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-          {slug && (
+          {pageHref && (
             <Link
-              href={`/projects/${slug}/`}
+              href={pageHref}
               className="tag-chip"
               style={{
                 fontFamily: "var(--font-mono)",
@@ -149,11 +154,11 @@ export default function ProjectCard({ project, slug }: ProjectCardProps) {
                 textDecoration: "none",
               }}
             >
-              Case Study →
+              {slug ? "Case Study →" : "Paper Summary →"}
             </Link>
           )}
           {project.demo && <TagChip href={project.demo} label="Demo" />}
-          {project.url && !project.demo && !slug && (
+          {project.url && !project.demo && !pageHref && (
             <TagChip href={project.url} label="Website" />
           )}
           {project.code && <TagChip href={project.code} label="Code" />}

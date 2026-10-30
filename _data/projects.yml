@@ -1,8 +1,8 @@
 - title: VizGroup
-  url: https://idl.uw.edu/mosaic/
-  paper: https://www.domoritz.de/papers/2023-Mosaic-VIS.pdf
-  image: mosaic.png
-  description: "Vizgroup is a learning analytics tool that helps instructors in "
+  page: /papers/vizgroup/
+  paper: https://chensivan.github.io/papers/vizgroup_uist_2024.pdf
+  image: /images/papers/vizgroup/teaser.webp
+  description: "VizGroup helps programming instructors monitor dozens of peer-discussion groups in real time, with LLM-suggested alerts and trackers."
   highlight: 1
 
 - title: VizPI

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Publication, Person } from "@/lib/types";
 
 interface PublicationCardProps {
@@ -78,6 +79,19 @@ function AuthorList({
   );
 }
 
+const PUB_LINK_STYLE: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: "var(--text-label)",
+  fontWeight: 500,
+  letterSpacing: "0.04em",
+  color: "var(--color-accent)",
+  border: "1px solid var(--color-accent)",
+  borderRadius: "var(--radius-sm)",
+  padding: "2px 8px",
+  textDecoration: "none",
+  transition: "background-color 150ms ease, color 150ms ease",
+};
+
 function PubLink({ href, label }: { href: string; label: string }) {
   return (
     <a
@@ -85,18 +99,7 @@ function PubLink({ href, label }: { href: string; label: string }) {
       target="_blank"
       rel="noopener noreferrer"
       className="pub-link"
-      style={{
-        fontFamily: "var(--font-mono)",
-        fontSize: "var(--text-label)",
-        fontWeight: 500,
-        letterSpacing: "0.04em",
-        color: "var(--color-accent)",
-        border: "1px solid var(--color-accent)",
-        borderRadius: "var(--radius-sm)",
-        padding: "2px 8px",
-        textDecoration: "none",
-        transition: "background-color 150ms ease, color 150ms ease",
-      }}
+      style={PUB_LINK_STYLE}
     >
       {label}
     </a>
@@ -193,6 +196,15 @@ export default function PublicationCard({
         )}
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
+          {pub.paperPage && (
+            <Link
+              href={pub.paperPage}
+              className="pub-link"
+              style={{ ...PUB_LINK_STYLE, color: "#fff", backgroundColor: "var(--color-accent)" }}
+            >
+              Project page →
+            </Link>
+          )}
           {pdfUrl && <PubLink href={pdfUrl} label="PDF" />}
           {arxivUrl && !pub.pdf && <PubLink href={arxivUrl} label="arXiv" />}
           {pub.html && <PubLink href={pub.html} label="HTML" />}
