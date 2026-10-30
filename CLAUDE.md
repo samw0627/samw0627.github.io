@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-Package manager is **pnpm** (CI uses pnpm 11, Node 22, matching local; pnpm 9 rejects the `pnpm-workspace.yaml` that pnpm 11 writes).
+Package manager is **pnpm** (pnpm 11 and Node 22, pinned in `package.json` `packageManager`/`engines`; pnpm 9 rejects this `pnpm-workspace.yaml`).
 
 ```bash
 pnpm dev      # Next.js dev server (http://localhost:3000)
@@ -16,7 +16,7 @@ There is no test suite. `pnpm build` is the real check: it runs type-checking an
 
 ## Architecture
 
-This is a personal academic site built with **Next.js 16 (App Router) + React 19 + Tailwind CSS v4**. It is exported as a fully static site (`output: "export"`, `trailingSlash: true`, unoptimized images in `next.config.ts`) and deployed to GitHub Pages by `.github/workflows/build.yml` on every push to `master`, which uploads `./out`.
+This is a personal academic site built with **Next.js 16 (App Router) + React 19 + Tailwind CSS v4**. It is exported as a fully static site (`output: "export"`, `trailingSlash: true`, unoptimized images in `next.config.ts`) and deployed on every push to `master` twice: to GitHub Pages (samw0627.github.io) by `.github/workflows/build.yml`, and to Vercel, which serves chwong.com. `vercel.json` overrides the Vercel project's old Jekyll preset so it runs the same pnpm build and serves `./out`.
 
 **Legacy Jekyll layout:** the site was migrated from Jekyll. `_config.yml`, `Gemfile`, `_layouts/`, `_includes/`, `_sass/`, `_site/`, the root `*.md`/`cv.html` pages, and the README's `jekyll` commands are leftovers and are **not used by the build**. However, the Next.js app still reads content from the Jekyll-style folders, so those folders are the source of truth for content.
 
