@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-Package manager is **pnpm** (CI uses pnpm 9, Node 20).
+Package manager is **pnpm** (CI uses pnpm 11, Node 22, matching local; pnpm 9 rejects the `pnpm-workspace.yaml` that pnpm 11 writes).
 
 ```bash
 pnpm dev      # Next.js dev server (http://localhost:3000)
