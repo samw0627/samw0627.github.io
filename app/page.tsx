@@ -26,7 +26,7 @@ const SECTION_LABEL: React.CSSProperties = {
 const SOCIAL_LINKS = [
   { label: "Email", href: "mailto:samw627@uw.edu" },
   { label: "GitHub", href: "https://github.com/samw0627" },
-  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=3ikhPPUAAAAJ&hl=en" },
+  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=nV15uCcAAAAJ&hl=en" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/samwong0627/" },
 ];
 
