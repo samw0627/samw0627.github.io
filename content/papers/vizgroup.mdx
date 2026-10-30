@@ -1,0 +1,246 @@
+---
+publication: 2024-vizgroup
+name: VizGroup
+tagline: Helping instructors keep track of dozens of peer-discussion groups at once, with an LLM that suggests what's worth watching.
+hero: /images/papers/vizgroup/teaser.webp
+hero_caption: "VizGroup visualizes student performance and collaboration on a live 2D scatter plot, and proactively suggests alerts and trackers so instructors can step in at the right moment."
+tldr: "In a 100+ student programming lecture, an instructor can't watch 37 discussion groups at once. VizGroup combines a zoomable live scatter plot of groups and students with LLM-suggested alerts and trackers. In a study with 12 instructors, they found struggling students faster and more accurately, and the suggestions led them to monitor patterns they wouldn't have thought to look for."
+contributions:
+  - title: What instructors need during live group work
+    body: "From interviews and a technology-probe study, we found that instructors need to track several collaboration-and-code patterns at once, notice when patterns emerge over time, and see how group interaction relates to a group's success."
+  - title: Context-aware suggestions for what to monitor
+    body: "A new approach that turns user interactions and real-time changes in class data into suggested trackers and alerts, so people who aren't visual-analytics experts can set up useful monitoring quickly."
+  - title: VizGroup, an AI-assisted monitoring system
+    body: "A three-level view of the class (group, structure, individual) plus a notification system whose alerts and trackers are proposed by an LLM pipeline that reads each group's code submissions and chat history."
+bibtex: |
+  @inproceedings{tang2024vizgroup,
+    author    = {Tang, Xiaohang and Wong, Sam and Pu, Kevin and Chen, Xi and Yang, Yalong and Chen, Yan},
+    title     = {VizGroup: An AI-Assisted Event-Driven System for Real-Time Collaborative Programming Learning Analytics},
+    booktitle = {Proceedings of the 37th Annual ACM Symposium on User Interface Software and Technology},
+    series    = {UIST '24},
+    year      = {2024},
+    location  = {Pittsburgh, PA, USA},
+    publisher = {Association for Computing Machinery},
+    doi       = {10.1145/3654777.3676347}
+  }
+---
+
+## The problem
+
+In <Term def="An in-class strategy where students first answer a question on their own, then discuss it with peers, revise, and resubmit.">Peer Instruction</Term>, students write code on their own, discuss it in small groups, revise, and resubmit. It reduces failure rates and improves exam performance, but only when the discussions are productive. In one large astronomy course, **37.7% of peer discussions were unproductive**, and instructors often don't find out until it's too late.
+
+In a large programming lecture, the instructor faces dozens of groups producing code submissions, test results and chat messages at the same time. Existing tools fall short in one of two ways:
+
+- **Learning-analytics dashboards** (e.g. VizProg, Codeopticon) show individual students' code in real time but ignore collaboration.
+- **Collaboration-analytics tools** (e.g. Groupnamics, Pair-Up) show group dynamics, but only with fixed, predefined metrics. They can't show how *discussion* relates to *progress on the coding task*.
+
+So the question is how to help an instructor notice which groups need help, and why, without getting buried in data.
+
+## Formative study
+
+We first interviewed **4 experienced instructors** of large programming courses, then built a <Term def="A simple, functional system deployed to learn about users' needs in context, rather than to test a finished design.">technology probe</Term> to test those ideas.
+
+<Figure src="/images/papers/vizgroup/probe.webp" n="2" caption="The technology probe. GPT-4 tags each chat message and summarizes each group's conversation topic; a scatter plot shows each group's activity level against its unit-test pass rate." />
+
+The probe ran unit tests on every code submission and used GPT-4 for two jobs: summarizing each group's conversation topic, and tagging every chat message with one of six categories drawn from <Term def="A theory holding that effective collaboration involves 'promotive interaction': members actively encouraging and facilitating each other's progress toward shared goals.">social interdependence theory</Term>: help-giving, help-seeking, exchanging information, joint reflection, mutual encouragement, or off-topic.
+
+<Deeper title="How the activity score is computed">
+
+Each on-task message (categories 1–5) adds **1.0** to a student's activity score, and each off-task message adds **0.3**. A group's score is the average of its members' scores. On the scatter plot, each group is a dot: x = unit-test pass rate, y = activity level.
+
+</Deeper>
+
+**8 instructors** then compared the probe against a baseline without the discussion features, using a replay of a real lecture: **111 students in 37 groups**.
+
+<Stats>
+  <Stat value="0.99" label="Recall finding students in group discussions" note="vs. 0.74 baseline · p < 0.01" />
+  <Stat value="0.88" label="Accuracy tracking group-dynamics trends" note="vs. 0.67 baseline · p < 0.05" />
+  <Stat value="4×" label="Detailed issues identified" note="2.0 vs. 0.5 per participant · p < 0.01" />
+</Stats>
+
+With the baseline, participants described issues vaguely ("Syntax Error"). With the probe they could connect code to conversation ("returning not an int or wrong int from calculation"). Completion time didn't differ.
+
+The probe also exposed a new problem: **instructors had to keep every pattern in their heads.**
+
+<Quote who="P6, formative study">
+
+Sometimes I forget some of the students' performance before that I can't tell if the pass rate was increased.
+
+</Quote>
+
+Which patterns mattered also depended on timing. A quiet group is fine while everyone is coding, but it becomes a problem once everyone else has submitted. This led to three design goals:
+
+1. **Navigate across granularity.** Move smoothly between class, group and individual views.
+2. **Monitor without constant attention.** Track patterns in real time so instructors don't have to.
+3. **Guide attention in context.** Interrupt only when it matters, based on what both instructors and students need right now.
+
+## How VizGroup works
+
+<Figure src="/images/papers/vizgroup/interface.webp" n="3" size="wide" caption="VizGroup's interface: (1) the scatter plot, (2) suggested and (3) active notifications, (4) class performance per unit test, (5) detail table of topics or errors, (6) group information, (7) LLM summary and chat history, (8) playback controls." />
+
+VizGroup tracks five attributes during a session. Pass rate, activity level and code issues are tracked for individual students. Pass rate, activity level, conversation topic and team structure are tracked for groups. All panels are linked, so selecting data in one updates the others.
+
+### Three levels of the same class
+
+Instructors zoom between three views of the class:
+
+<Tabs>
+<Tab label="Group view">
+
+Each triangle is a group, placed by its **average pass rate** (x) and **average activity** (y). This view is for a quick read of the whole class: which groups are behind, and whether they're talking.
+
+</Tab>
+<Tab label="Structure view">
+
+Groups are placed by their **current conversation topic** (x) and **number of active members** (y). Each group is drawn as a small network, with arrows showing who messaged whom; thicker arrows mean more messages. Dots are green when a student passes every test and pink when they don't. When a group's topic or participation changes, its glyph moves and **flashes** to catch the instructor's eye. To avoid clutter, only the eight lowest-scoring groups are expanded.
+
+</Tab>
+<Tab label="Individual view">
+
+Each circle is a student, placed by **pass rate** (x) and **activity** (y). This view is for spotting students who are struggling or left out, as well as students who are doing well and could help their peers.
+
+</Tab>
+</Tabs>
+
+<Figure src="/images/papers/vizgroup/three-views.webp" n="4" size="wide" caption="Zooming moves between Group, Structure and Individual views. (1) Brushing an area selects several points; (2) clicking one shows its history trace; (3–6) the Structure view's topic axis, moving glyphs, participation arrows and flashing updates." />
+
+<Deeper title="How conversation topics are found">
+
+Each group's conversation is embedded with an LLM (`text-embedding-3-large`), and the embeddings are clustered with **K-means++**. Each cluster gets a short summary. New summaries are compared against existing ones and merged when they match, so the topic list stays short and stable as the session goes on. Arrow thickness in the Structure view is `min(A × 0.25, 2) + 1`, where *A* is the student's activity level.
+
+</Deeper>
+
+### Trackers and alerts
+
+To meet the second design goal (monitoring without constant attention), instructors can turn any pattern into a notification:
+
+- A **tracker** charts an attribute over time, such as code issues, conversation topics or how many members are participating, as either a bar chart or a timeline.
+- An **alert** fires when students or groups meet criteria the instructor sets. Alerts come in two kinds:
+
+<Tabs>
+<Tab label="Temporal alert">
+
+<Figure src="/images/papers/vizgroup/temporal-alert.webp" n="8" caption="A temporal alert reports any data point that stays in the highlighted region for more than 2 minutes." />
+
+Every data point that matches the criteria gets its own "alarm clock." If a group stays stuck, say talking about syntax errors with a pass rate under 41% for **more than 2 minutes**, the instructor is notified about that group.
+
+</Tab>
+<Tab label="Spatial alert">
+
+<Figure src="/images/papers/vizgroup/spatial-alert.webp" n="9" caption="A spatial alert fires when the number of points in a region exceeds a threshold." />
+
+The alert fires when **too many** students fall into a region at once. For example: more than 10 students with a pass rate below 50% and activity between 0 and 3. That usually signals a class-wide misconception rather than one group's trouble.
+
+</Tab>
+</Tabs>
+
+### The AI suggests what to watch
+
+Writing good alert criteria in the middle of a lecture is hard, which is where the third design goal comes in. VizGroup suggests notifications in two ways:
+
+- **From the instructor's interactions.** Clicking a group, brushing a region or expanding a topic produces a suggested alert prefilled with those values, which the instructor can then edit.
+- **From the class's history.** An LLM pipeline reviews every group's submissions and chat logs and proposes alerts for the problems it judges most urgent.
+
+<Figure src="/images/papers/vizgroup/suggestion-pipeline.webp" n="11" size="wide" caption="The suggestion pipeline: identify each group's issues, rank them by severity, summarize and categorize the top five, then compute alert and tracker criteria from them." />
+
+<Deeper title="The four-step suggestion pipeline">
+
+1. **Identify issues.** For each group, the LLM reviews its submission history, conversation log, pass rate, activity, topic and participation, and names the specific problem, e.g. "no conversation despite submission attempts."
+2. **Rank by severity.** A <Term def="The LLM ranks the whole list of candidates in one pass, rather than scoring each one separately or comparing them in pairs. This balances cost and quality.">list-wise ranking</Term> puts issues that need a TA above ones students can resolve themselves.
+3. **Summarize the top 5.** The LLM summarizes what the five most severe groups have in common, and which attributes (pass rate, topic, relevance, participation) are involved.
+4. **Generate criteria.** VizGroup computes the alert criteria from those groups: the set of values for categorical attributes, and the minimum and maximum for numeric ones.
+
+The prompts use few-shot examples and AI chains; the full prompts are in the paper's appendix.
+
+</Deeper>
+
+## Evaluation
+
+**12 instructors** with programming-teaching experience watched a live replay of the same 111-student peer-instruction session. Each used two of three versions: a **baseline** (interactive visualization only), **VizGroup without suggestions**, and the **full VizGroup**. They answered two quiz questions and did an open-ended monitoring task:
+
+- **Q1:** find students who haven't passed and only sent off-topic messages.
+- **Q2:** find groups with a specific difficulty, and track the ones stuck for two minutes.
+
+### Instructors were faster and more accurate
+
+<Tabs>
+<Tab label="Q1 · off-task students">
+
+<Bars title="Recall" max="1">
+  <Bar label="Baseline" value="0.73" />
+  <Bar label="VizGroup" value="0.96" display="0.96**" highlight />
+</Bars>
+
+<Bars title="Precision" max="1">
+  <Bar label="Baseline" value="0.72" />
+  <Bar label="VizGroup" value="0.98" display="0.98**" highlight />
+</Bars>
+
+<Bars title="Time (seconds)" note="* p < 0.05 · ** p < 0.01. Shorter is better for time.">
+  <Bar label="Baseline" value="348" />
+  <Bar label="VizGroup" value="224" display="224*" highlight />
+</Bars>
+
+</Tab>
+<Tab label="Q2 · stuck groups">
+
+<Bars title="Recall" max="1">
+  <Bar label="Baseline" value="0.82" />
+  <Bar label="VizGroup" value="0.98" display="0.98**" highlight />
+</Bars>
+
+<Bars title="Precision" max="1">
+  <Bar label="Baseline" value="0.97" />
+  <Bar label="VizGroup" value="1.00" highlight />
+</Bars>
+
+<Bars title="Time (seconds)" note="** p < 0.01. Shorter is better for time.">
+  <Bar label="Baseline" value="338" />
+  <Bar label="VizGroup" value="251" display="251**" highlight />
+</Bars>
+
+</Tab>
+</Tabs>
+
+On Q2, most VizGroup users set an alert and moved on to look at other groups, while most baseline users had to keep watching the target groups themselves.
+
+<Quote who="P4">
+
+It is not that hard for me to monitor a group of students, but it would be impossible if there are multiple groups to track.
+
+</Quote>
+
+### Suggestions changed what instructors looked for
+
+In the open-ended task, participants received about **18 suggestions** each. Of the 13 kinds of notification suggested, 11 were accepted by at least one participant.
+
+<Stats>
+  <Stat value="+26%" label="More notifications created" note="5.67 vs. 4.50 · not significant" />
+  <Stat value="+35%" label="More diverse criteria" note="4.50 vs. 3.33 types · not significant" />
+  <Stat value="91%" label="Of notifications came from suggestions" note="5.17 of 5.67; only 0.5 created by hand" />
+</Stats>
+
+The suggestions also pulled instructors beyond their usual strategy. P3 began by saying *"I care about the pass rate, not the type of code issues"*. They then accepted a suggested Code Issue alert because the students it flagged "made sense," and went on to create more Code Issue alerts themselves. Without suggestions, participants such as P5 tended to make several near-identical notifications.
+
+Participants reported **lower mental demand** with suggestions (median 2.0 vs. 3.5 on the NASA-TLX scale) and lower time pressure (1.0 vs. 2.0, not significant).
+
+<Figure src="/images/papers/vizgroup/survey.webp" n="12" size="wide" caption="Post-task survey. Top: NASA-TLX workload (1 = very low). Bottom: ease of use and usefulness (7 = very positive)." />
+
+Instructors also saw the alerts as a way to **prepare before stepping in**:
+
+<Quote who="P6">
+
+The topics filter can help professors/TAs prepare beforehand to help students instead of just going up to them and asking what they're struggling on.
+
+</Quote>
+
+## Limitations
+
+- **A simulated classroom.** The study used real student data, but participants watched a replay rather than teaching live, so there was less pressure and distraction, and no real students to help.
+- **One session.** All data came from a single peer-instruction session in one large course, which may not generalize to other courses or smaller classes.
+- **Five attributes.** Notifications are limited to pass rate, activity, code issues, topic and team structure.
+- **LLM trust and scale.** The suggestions raise questions of stability, transparency and trust, and very long chat or submission histories can exceed the model's context window.
+
+## Takeaways
+
+Large classes don't have to mean less support for each group. VizGroup shows that an AI can do more than summarize: it can **propose what to watch**. Instructors stayed in control of every alert, but the suggestions widened what they paid attention to and reduced how much they had to remember. More broadly, this points to a model of human-AI collaboration in real-time analytics where the AI suggests and the person decides.

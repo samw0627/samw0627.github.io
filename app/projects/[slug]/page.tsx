@@ -7,7 +7,11 @@ import ProjectSideNav from "@/components/ProjectSideNav";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
-  return getAllProjectSlugs().map((slug) => ({ slug }));
+  const slugs = getAllProjectSlugs();
+  // `output: "export"` rejects a dynamic route with no params. Until
+  // content/projects/ has a case study, emit one placeholder that 404s.
+  if (slugs.length === 0) return [{ slug: "_none" }];
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
