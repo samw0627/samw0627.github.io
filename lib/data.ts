@@ -3,12 +3,11 @@ import path from "path";
 import { load } from "js-yaml";
 import type { Person, Talk, Position, Education, Award, NewsItem } from "./types";
 
+// Missing or fully commented-out data files are treated as empty lists
 function loadYaml<T>(filename: string): T {
-  const raw = fs.readFileSync(
-    path.join(process.cwd(), "_data", filename),
-    "utf8"
-  );
-  return load(raw) as T;
+  const file = path.join(process.cwd(), "_data", filename);
+  if (!fs.existsSync(file)) return [] as T;
+  return (load(fs.readFileSync(file, "utf8")) ?? []) as T;
 }
 
 export const getPeople = () => loadYaml<Record<string, Person>>("people.yml");
