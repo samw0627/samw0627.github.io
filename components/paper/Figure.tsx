@@ -6,16 +6,14 @@ interface FigureProps {
   caption?: string;
   /** Figure number as printed in the paper, e.g. "3" */
   n?: string;
-  /** "wide" breaks out of the text column on large screens */
-  size?: "wide";
 }
 
 // Rendered on the server; FigureLightbox picks up every [data-figure]
 // button on the page for click-to-zoom and gallery navigation.
-export default function Figure({ src, alt, caption, n, size }: FigureProps) {
+export default function Figure({ src, alt, caption, n }: FigureProps) {
   const label = n ? `Figure ${n}` : undefined;
   return (
-    <figure className={`paper-figure${size === "wide" ? " paper-figure--wide" : ""}`}>
+    <figure className="paper-figure">
       <button
         type="button"
         className="paper-figure__zoom"

@@ -176,10 +176,8 @@
 
 /* ─── Figure + lightbox ─────────────────────────────────── */
 
-.paper-figure { margin: 36px 0; }
-@media (min-width: 1060px) {
-  .paper-figure--wide { margin-right: -120px; }
-}
+/* Every figure spans exactly the text column so edges line up */
+.paper-figure { margin: 36px 0; width: 100%; }
 .paper-figure__zoom {
   position: relative;
   display: block;
@@ -429,7 +427,11 @@
 .tabs__tab:hover { color: var(--color-text-primary); }
 .tabs__tab[aria-selected="true"] { color: var(--color-accent); border-bottom-color: var(--color-accent); }
 .tabs__panel { padding: 20px 20px 4px; }
-.tabs__panel .paper-figure { margin: 0 0 20px; }
+/* Figures in a tab run edge to edge of the tab box (= text width) */
+/* -21px also covers the tab box's 1px side borders */
+.tabs__panel .paper-figure { margin: -20px -21px 20px; width: calc(100% + 42px); }
+.tabs__panel .paper-figure__zoom { border-width: 0 0 1px; }
+.tabs__panel .paper-figure figcaption { padding: 0 20px; }
 
 /* ─── Video ─────────────────────────────────────────────── */
 
@@ -459,3 +461,116 @@
   color: var(--color-text-primary);
 }
 .bibtex .copy-btn { position: absolute; top: 10px; right: 10px; }
+
+/* ─── Likert (diverging stacked bar) ───────────────────── */
+
+.likert {
+  position: relative;
+  margin: 36px 0;
+  /* Diverging ramp: red (low) ← gray (neutral) → blue (high) */
+  --lk-n3: #a3262a; --lk-n2: #e34948; --lk-n1: #ec8c8b;
+  --lk-0: #cfcec8;
+  --lk-p1: #86b6ef; --lk-p2: #2a78d6; --lk-p3: #184f95;
+  --lk-ink-light: #0b0b0b; /* label ink on the light steps */
+}
+[data-theme="dark"] .likert {
+  --lk-n3: #b8383a; --lk-n2: #e66767; --lk-n1: #f0a3a2;
+  --lk-0: #5a5955;
+  --lk-p1: #9ec5f4; --lk-p2: #3987e5; --lk-p3: #1c5cab;
+}
+.likert-c-3 { background: var(--lk-n3); color: #fff; }
+.likert-c-2 { background: var(--lk-n2); color: #fff; }
+.likert-c-1 { background: var(--lk-n1); color: var(--lk-ink-light); }
+.likert-c0  { background: var(--lk-0);  color: var(--lk-ink-light); }
+.likert-c1  { background: var(--lk-p1); color: var(--lk-ink-light); }
+.likert-c2  { background: var(--lk-p2); color: #fff; }
+.likert-c3  { background: var(--lk-p3); color: #fff; }
+[data-theme="dark"] .likert-c0 { color: #fff; }
+
+.likert__title { margin: 0 0 4px !important; font-weight: 600; font-size: var(--text-small); }
+.likert__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--color-text-secondary);
+}
+.likert__end { color: var(--color-text-tertiary); }
+.likert__key { display: inline-flex; align-items: center; gap: 5px; }
+.likert__swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+.likert__item { padding: 10px 0; border-top: 1px solid var(--color-border-faint); }
+.likert__label { margin: 0 0 6px !important; font-size: var(--text-small); font-weight: 500; }
+.likert__row {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+.likert__group { font-size: var(--text-caption); color: var(--color-text-secondary); white-space: nowrap; }
+.likert__track { position: relative; height: 20px; }
+.likert__axis {
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: var(--color-text-tertiary);
+}
+/* Bars sit above the center line so it never crosses a count label */
+.likert__bar { position: absolute; top: 0; bottom: 0; z-index: 1; display: flex; gap: 2px; }
+.likert__seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 0;
+  outline: none;
+  cursor: default;
+  transition: filter 120ms ease;
+}
+.likert__seg:first-child { border-radius: 4px 0 0 4px; }
+.likert__seg:last-child { border-radius: 0 4px 4px 0; }
+.likert__seg:only-child { border-radius: 4px; }
+.likert__seg:hover { filter: brightness(1.12); }
+.likert__seg:focus-visible { box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-text-primary); }
+.likert__count { font-family: var(--font-mono); font-size: 10px; font-weight: 500; }
+
+.likert__tip {
+  position: absolute;
+  z-index: 30;
+  transform: translate(-50%, calc(-100% - 8px));
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  white-space: nowrap;
+  font-size: var(--text-caption);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+}
+.likert__tip strong { font-size: var(--text-small); color: var(--color-text-primary); font-weight: 600; }
+
+.likert__note { margin: 12px 0 0 !important; font-size: var(--text-caption); color: var(--color-text-tertiary); }
+.likert__table { margin-top: 10px; }
+.likert__table summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+.likert__table table { margin-top: 10px; }
+.likert__table td:nth-child(n+3), .likert__table th:nth-child(n+3) { text-align: center; }
+
+@media (max-width: 520px) {
+  .likert__row { grid-template-columns: 84px 1fr; gap: 8px; }
+  .likert__group { font-size: 11px; }
+}

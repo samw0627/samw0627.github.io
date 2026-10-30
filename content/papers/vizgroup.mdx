@@ -76,7 +76,7 @@ Which patterns mattered also depended on timing. A quiet group is fine while eve
 
 ## How VizGroup works
 
-<Figure src="/images/papers/vizgroup/interface.webp" n="3" size="wide" caption="VizGroup's interface: (1) the scatter plot, (2) suggested and (3) active notifications, (4) class performance per unit test, (5) detail table of topics or errors, (6) group information, (7) LLM summary and chat history, (8) playback controls." />
+<Figure src="/images/papers/vizgroup/interface.webp" n="3" caption="VizGroup's interface: (1) the scatter plot, (2) suggested and (3) active notifications, (4) class performance per unit test, (5) detail table of topics or errors, (6) group information, (7) LLM summary and chat history, (8) playback controls." />
 
 VizGroup tracks five attributes during a session. Pass rate, activity level and code issues are tracked for individual students. Pass rate, activity level, conversation topic and team structure are tracked for groups. All panels are linked, so selecting data in one updates the others.
 
@@ -102,7 +102,7 @@ Each circle is a student, placed by **pass rate** (x) and **activity** (y). This
 </Tab>
 </Tabs>
 
-<Figure src="/images/papers/vizgroup/three-views.webp" n="4" size="wide" caption="Zooming moves between Group, Structure and Individual views. (1) Brushing an area selects several points; (2) clicking one shows its history trace; (3–6) the Structure view's topic axis, moving glyphs, participation arrows and flashing updates." />
+<Figure src="/images/papers/vizgroup/three-views.webp" n="4" caption="Zooming moves between Group, Structure and Individual views. (1) Brushing an area selects several points; (2) clicking one shows its history trace; (3–6) the Structure view's topic axis, moving glyphs, participation arrows and flashing updates." />
 
 <Deeper title="How conversation topics are found">
 
@@ -141,7 +141,7 @@ Writing good alert criteria in the middle of a lecture is hard, which is where t
 - **From the instructor's interactions.** Clicking a group, brushing a region or expanding a topic produces a suggested alert prefilled with those values, which the instructor can then edit.
 - **From the class's history.** An LLM pipeline reviews every group's submissions and chat logs and proposes alerts for the problems it judges most urgent.
 
-<Figure src="/images/papers/vizgroup/suggestion-pipeline.webp" n="11" size="wide" caption="The suggestion pipeline: identify each group's issues, rank them by severity, summarize and categorize the top five, then compute alert and tracker criteria from them." />
+<Figure src="/images/papers/vizgroup/suggestion-pipeline.webp" n="11" caption="The suggestion pipeline: identify each group's issues, rank them by severity, summarize and categorize the top five, then compute alert and tracker criteria from them." />
 
 <Deeper title="The four-step suggestion pipeline">
 
@@ -224,7 +224,18 @@ The suggestions also pulled instructors beyond their usual strategy. P3 began by
 
 Participants reported **lower mental demand** with suggestions (median 2.0 vs. 3.5 on the NASA-TLX scale) and lower time pressure (1.0 vs. 2.0, not significant).
 
-<Figure src="/images/papers/vizgroup/survey.webp" n="12" size="wide" caption="Post-task survey. Top: NASA-TLX workload (1 = very low). Bottom: ease of use and usefulness (7 = very positive)." />
+<Likert title="Workload (NASA-TLX)" groups="No suggestions|VizGroup" low="1 = very low" high="7 = very high">
+  <Item label="Mental demand" counts="1,0,2,1,0,2,0|1,3,1,0,1,0,0" />
+  <Item label="Temporal demand" counts="2,3,0,0,1,0,0|4,2,0,0,0,0,0" />
+  <Item label="Performance" counts="3,2,0,1,0,0,0|2,4,0,0,0,0,0" />
+  <Item label="Effort" counts="1,0,4,0,1,0,0|2,1,1,0,2,0,0" />
+  <Item label="Frustration" counts="3,2,0,0,1,0,0|3,1,1,1,0,0,0" />
+</Likert>
+
+<Likert title="Ease of use and usefulness" groups="No suggestions|VizGroup" low="1 = very negative" high="7 = very positive" note="Figure 12, redrawn. Counts of the 6 participants per condition are estimated from the paper's chart; hover or focus a segment for its count.">
+  <Item label="Ease of use" counts="0,0,1,0,3,1,1|0,0,1,0,1,4,0" />
+  <Item label="Usefulness" counts="0,0,0,0,0,4,2|0,0,0,0,0,4,2" />
+</Likert>
 
 Instructors also saw the alerts as a way to **prepare before stepping in**:
 

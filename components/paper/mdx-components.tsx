@@ -5,6 +5,7 @@ import { slugify } from "@/lib/slug";
 import Figure from "./Figure";
 import { Tabs, Tab } from "./Tabs";
 import { Term, Deeper, Stats, Stat, Quote, Bars, Bar, Video } from "./Inline";
+import { Likert, Item } from "./Likert";
 
 function textOf(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -39,5 +40,7 @@ export function paperMdxComponents(
     Bars,
     Bar,
     Video,
+    Likert,
+    Item,
   };
 }
